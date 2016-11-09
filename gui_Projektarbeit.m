@@ -22,7 +22,7 @@ function varargout = gui_Projektarbeit(varargin)
 
 % Edit the above text to modify the response to help gui_Projektarbeit
 
-% Last Modified by GUIDE v2.5 08-Nov-2016 15:08:13
+% Last Modified by GUIDE v2.5 09-Nov-2016 13:55:36
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -368,6 +368,8 @@ switch selectedItemVerfahren
         [KR,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
     case 'CHR'
         [KR,Tn,Tv] = CHR(konstanteK,Ta,Tu,selectedItemController);
+    case 'Kuhn normal'
+        [KR,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
 end
 
 % Regler
