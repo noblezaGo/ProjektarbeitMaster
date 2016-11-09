@@ -1,4 +1,4 @@
-% T-Summenregel nach Kuhn
+% T-Summenregel nach Kuhn normal
 function[Kr,Tn,Tv] = Kuhn_normal(Ks,T1,T2,selectedController)
 % TO DO
 

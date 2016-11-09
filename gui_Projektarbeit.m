@@ -54,15 +54,21 @@ function gui_Projektarbeit_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   unrecognized PropertyName/PropertyValue pairs from the
 %            command line (see VARARGIN)
 
+set(handles.popupmenu_Regler,'Enable','off'); 
+% Streckenübertragungsfunktion anzeigen
 axes(handles.axes2);
 G1=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionStreckeTForm','png');   % Einlesen der Grafik 
 image (G1);        % Grafik ausgeben
 axis off 
 
+% Plot beschriften
 axes(handles.axes1);
 title('Systemsprungantwort');
 xlabel('t in s');
 ylabel('y(t)');
+
+% Einträge Popupmenü-Verfahren setzen
+% set(handles.popupmenu_Verfahren, 'String', 'ziegler')
 
 % Choose default command line output for gui_Projektarbeit
 handles.output = hObject;
@@ -103,6 +109,20 @@ contents = get(hObject,'String');
 % selectedItemVerfahren enthält ausgewähltes Berechnungsverfahren
 selectedItemVerfahren = contents{get(hObject,'Value')};
 
+switch selectedItemVerfahren
+    case 'Ziegler-Nichols'
+        set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
+    case 'CHR'
+        set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
+    case 'Kuhn normal'
+        set(handles.popupmenu_Regler, 'String', {'PI-Regler','PID-Regler'});
+    case 'Kuhn schnell'
+        set(handles.popupmenu_Regler, 'String', {'PI-Regler','PID-Regler'});
+end
+        
+        
+set(handles.popupmenu_Regler,'Enable','on'); 
+
 handles.selectedItemVerfahren = selectedItemVerfahren;
 guidata(hObject,handles);
 end
@@ -117,6 +137,8 @@ function popupmenu_Verfahren_CreateFcn(hObject, eventdata, handles)
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
+    
+    
 end
 end
 
@@ -370,6 +392,8 @@ switch selectedItemVerfahren
         [KR,Tn,Tv] = CHR(konstanteK,Ta,Tu,selectedItemController);
     case 'Kuhn normal'
         [KR,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
+    case 'Kuhn schnell'
+        [KR,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
 end
 
 % Regler
