@@ -1,21 +1,22 @@
 % Projektarbeit 
-function [Tu,Ta] =  Bestimmung_Wendetangente(K,T,Daempfung)
+function [Tu,Ta] =  Bestimmung_Wendetangente(K,T1,T2)
 syms s t;
 
 % Zeitkonstante Zähler Regelstrecke
 %K = 1;
 
-% Zeitkonstante und Dämpfung Nenner Regelstrecke
-%T = 1; % Zeitkonstante
-%Daempfung = 1; % Dämpfung
+% Zeitkonstante T1 und T2 Nenner Regelstrecke
+% T1 : Zeitkonstante1 der Strecke
+% T2 : Zeitkonstante2 der Strecke
 
 % Berechnung der Wendetangente für Ziegler-Nichols / CHR
 % Übertragungsfkt
-F = K/(T^2*s^2+2*Daempfung*T*s+1);
+G = K/((T1*s+1) * (T2*s+1));
+%F = K/(T^2*s^2+2*Daempfung*T*s+1);
 
 
 % Sprungantwort im Laplace Bereich
-H = F * 1/s;
+H = G * 1/s;
 
 % Sprungantwort in Zeitbereich wandeln
 h = ilaplace(H);

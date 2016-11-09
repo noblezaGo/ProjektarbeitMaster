@@ -445,8 +445,8 @@ hold on;
 
 systemlegend = zeros(handles.Anzahl,1);
 for i= 1:handles.Anzahl
-    anzLegend = num2str(handles.Anzahl);
-    systemlegend(i) = char(anzLegend);
+    anzLegend = handles.Anzahl;
+    systemlegend(i) = num2str(anzLegend)];
 end
 legend(systemlegend);
 
