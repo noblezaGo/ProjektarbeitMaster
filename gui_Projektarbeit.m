@@ -269,6 +269,7 @@ function pushbuttonClearFigure_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 cla(handles.axes1);
+legend(handles.axes1,'off');
 end
 
 
@@ -439,16 +440,19 @@ axes(handles.axes1);
 
 
 %systemlegend = ['System1'; 'System2'];
-plot(step_response.Time,step_response.Data);
-hold on;
+hold all;
+plot(step_response.Time,step_response.Data, 'DisplayName', ['System ' num2str(handles.Anzahl)]);
+%hold on;
+legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
 %plot(step_response.Time,step_response.Time.^2);
 
-systemlegend = zeros(handles.Anzahl,1);
-for i= 1:handles.Anzahl
-    anzLegend = num2str(handles.Anzahl);
-    systemlegend(i) = char(anzLegend);
-end
-legend(systemlegend);
+% systemlegend = [];
+% for i= 1:handles.Anzahl
+%     legendNumber(i,1) = i;
+% end
+
+
+% legend(num2str(systemlegend));
 
 %asdasd
 
