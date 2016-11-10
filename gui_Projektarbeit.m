@@ -22,7 +22,7 @@ function varargout = gui_Projektarbeit(varargin)
 
 % Edit the above text to modify the response to help gui_Projektarbeit
 
-% Last Modified by GUIDE v2.5 09-Nov-2016 13:55:36
+% Last Modified by GUIDE v2.5 10-Nov-2016 10:55:07
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -152,7 +152,7 @@ function popupmenu_Regler_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_Regler contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu_Regler
 
-% contents enthält Tabelle mit Inhalten des Popup-Menüs
+% contents enthält cell array mit Inhalten des Popup-Menüs
 contents = get(hObject,'String');
 
 % get(hObject,'Value') gibt Nummer des ausgewählten Eintrages zurück
@@ -280,8 +280,33 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 end
 
+function TransportDelay_Callback(hObject, eventdata, handles)
+% hObject    handle to TransportDelay (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
+% Hints: get(hObject,'String') returns contents of TransportDelay as text
+%        str2double(get(hObject,'String')) returns contents of TransportDelay as a double
 
+handles.totzeitTt = str2double(get(hObject,'String'));
+
+% guidata updaten
+guidata(hObject,handles);
+end
+
+% --- Executes during object creation, after setting all properties.
+function TransportDelay_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to TransportDelay (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+end
 
 
 % --- Executes on button press in pushbuttonClearFigure.
@@ -290,8 +315,17 @@ function pushbuttonClearFigure_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% Plot figure wird zurückgesetzt, alle Plots gelöscht
 cla(handles.axes1);
+% Legende wird aus plot figure gelöscht
 legend(handles.axes1,'off');
+% handels.Anzahl enthält Info, wie oft Start Button gedrückt wurde
+% Info wird für die Legendenbeschriftung benutzt
+% Zurücksetzen des Zählers, um bei Legendenbeschriftung wieder von vorn zu
+% zählen anzufangen
+handles.AnzahlStartButtonPushed = 0;
+
+guidata(hObject,handles);
 end
 
 
@@ -359,6 +393,7 @@ function startbutton_Callback(hObject, eventdata, handles)
 konstanteK = handles.konstanteK;
 zeitkonstanteT1 = handles.zeitkonstanteT1;
 zeitkonstanteT2 = handles.zeitkonstanteT2;
+totzeitTt = handles.totzeitTt;
 
 % Call der Funktion Bestimmung_Wendetangente
 [Tu,Ta] = Bestimmung_Wendetangente(konstanteK,zeitkonstanteT1,zeitkonstanteT2);
@@ -412,6 +447,8 @@ Dparam = Tv;
 GsNumerator = [konstanteK];
 % Nenner ÜF der Regelstrecke
 GsDenominator = [zeitkonstanteT1*zeitkonstanteT2 zeitkonstanteT1+zeitkonstanteT2 1];
+% Totzeit Strecke
+TransportDelay = totzeitTt;
 
 % Variablen, die Simulink benötigt, in base workspace schreiben
 assignin('base','P',Pparam); % P-Parameter des Reglers
@@ -419,6 +456,7 @@ assignin('base','I',Iparam); % I-Parameter des Reglers
 assignin('base','D',Dparam); % D-Parameter des Reglers
 assignin('base','GsNum',GsNumerator); % Zähler ÜF Regelstrecke
 assignin('base','GsDenom',GsDenominator); % Nenner ÜF Regelstrecke
+assignin('base','TransportDelay',TransportDelay); % Totzeit Tt der Regelstrecke
 
 % Simulink Projekt 'pidProj' öffnen
 pidProj
@@ -453,27 +491,27 @@ set(handles.TextCalculatedD, 'String',['D = ' num2str(Dparam)]);
 
 % Abrage, wie oft der Start-Button gedrückt wurde, um Anzahl an Plots in
 % der figure bestimmen zu können-> nötig für 'legend'
-if(isfield(handles,'Anzahl')) 
-    handles.Anzahl = handles.Anzahl + 1;
+if(isfield(handles,'AnzahlStartButtonPushed')) 
+    handles.AnzahlStartButtonPushed = handles.AnzahlStartButtonPushed + 1;
 else 
-    handles.Anzahl = 1;
+    handles.AnzahlStartButtonPushed = 1;
 end 
 guidata(hObject,handles)
 
 % Plot der Sprungantwort in Axes1
 axes(handles.axes1);
-%systemLegend = ['System' num2str(handles.Anzahl)];
+%systemLegend = ['System' num2str(handles.AnzahlStartButtonPushed)];
 
 
 %systemlegend = ['System1'; 'System2'];
 hold all;
-plot(step_response.Time,step_response.Data, 'DisplayName', ['System ' num2str(handles.Anzahl)]);
+plot(step_response.Time,step_response.Data, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
 %hold on;
 legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
 %plot(step_response.Time,step_response.Time.^2);
 
 % systemlegend = [];
-% for i= 1:handles.Anzahl
+% for i= 1:handles.AnzahlStartButtonPushed
 %     legendNumber(i,1) = i;
 % end
 
@@ -483,3 +521,6 @@ legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende d
 %asdasd
 
 end
+
+
+
