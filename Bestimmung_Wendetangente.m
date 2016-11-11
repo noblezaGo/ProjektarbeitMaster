@@ -1,6 +1,7 @@
 % Projektarbeit 
 function [Tu,Ta] =  Bestimmung_Wendetangente(K,T1,T2)
-syms s t;
+syms t;
+s = tf('s');
 
 % Zeitkonstante Zähler Regelstrecke
 %K = 1;

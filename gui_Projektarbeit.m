@@ -110,14 +110,27 @@ contents = get(hObject,'String');
 selectedItemVerfahren = contents{get(hObject,'Value')};
 
 switch selectedItemVerfahren
+    % Wenn Ziegler-Nichols als Verfahren gewählt wurde, stehen als Regler
+    % P,PI und PID zu Verfügung
+    % Default-Einstellung ist P-Regler
     case 'Ziegler-Nichols'
         set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
+        set(handles.popupmenu_Regler, 'Value', 1);
+    % Wenn CHR als Verfahren gewählt wurde, stehen als Regler
+    % P,PI und PID zu Verfügung
+    % Default-Einstellung ist P-Regler
     case 'CHR'
         set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
+        set(handles.popupmenu_Regler, 'Value', 1);
+    % Wenn Kuhn normal oder schnell als Verfahren gewählt wurde, stehen als Regler
+    % PI und PID zu Verfügung
+    % Default-Einstellung ist PI-Regler
     case 'Kuhn normal'
         set(handles.popupmenu_Regler, 'String', {'PI-Regler','PID-Regler'});
+        set(handles.popupmenu_Regler, 'Value', 1);
     case 'Kuhn schnell'
         set(handles.popupmenu_Regler, 'String', {'PI-Regler','PID-Regler'});
+        set(handles.popupmenu_Regler, 'Value', 1);
 end
         
         
@@ -464,7 +477,7 @@ assignin('base','GsDenom',GsDenominator); % Nenner ÜF Regelstrecke
 assignin('base','TransportDelay',TransportDelay); % Totzeit Tt der Regelstrecke
 
 % Simulink Projekt 'pidProj' öffnen
-pidProj
+open_system('C:\Users\David\GitRepo\pidProj.slx')
 
 % Start- und Stoppzeit Parameter der Simulation setzen
 % Default-Werte setzen: startTime = 0; stopTime = 30; -> diese Werte
@@ -483,7 +496,7 @@ set_param('pidProj', 'StartTime', num2str(startTime));
 set_param('pidProj', 'StopTime', num2str(stopTime));
 
 % Simulink Simulation starten
-sim('pidProj');
+sim('C:\Users\David\GitRepo\pidProj.slx');
 
 
 
