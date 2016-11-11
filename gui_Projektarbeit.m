@@ -153,18 +153,18 @@ function popupmenu_Regler_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from popupmenu_Regler
 
 % contents enthält cell array mit Inhalten des Popup-Menüs
-contents = get(hObject,'String');
+% contents = get(hObject,'String');
 
 % get(hObject,'Value') gibt Nummer des ausgewählten Eintrages zurück
 % selectedItemController enthält ausgewähltes Berechnungsverfahren
-selectedItemController = contents{get(hObject,'Value')};
-
-handles.selectedItemController = selectedItemController;
+% selectedItemController = contents{get(hObject,'Value')};
+% 
+% handles.selectedItemController = selectedItemController;
 
 
 % TO DO
 % Blockschaltbild des ausgewählten Reglers einfügen
-guidata(hObject,handles);
+% guidata(hObject,handles);
 
 end
 
@@ -395,9 +395,14 @@ zeitkonstanteT1 = handles.zeitkonstanteT1;
 zeitkonstanteT2 = handles.zeitkonstanteT2;
 totzeitTt = handles.totzeitTt;
 
-% Call der Funktion Bestimmung_Wendetangente
+% Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+% zurückgegeben
 [Tu,Ta] = Bestimmung_Wendetangente(konstanteK,zeitkonstanteT1,zeitkonstanteT2);
 
+% Abfrage, welcher Regler im Popup-Menü angewählt wurde -> gewählter Regler
+% steht als String in selectedItemController
+contentReglerPopupMenu = get(handles.popupmenu_Regler,'String');
+selectedItemController = contentReglerPopupMenu{get(handles.popupmenu_Regler,'Value')};
 
 % isfield frägt ob die gegebene Variable in der struct handle existiert:
 % Wenn nicht in Popup-Menü des Verfahrens und des Reglers geklickt wurde,
@@ -411,11 +416,11 @@ else
     selectedItemVerfahren = 'Ziegler-Nichols';
 end
 
-if(isfield(handles,'selectedItemController'))
-    selectedItemController = handles.selectedItemController;
-else 
-    selectedItemController = 'P-Regler';
-end
+% if(isfield(handles,'selectedItemController'))
+%     selectedItemController = handles.selectedItemController;
+% else 
+%     selectedItemController = 'P-Regler';
+% end
 
 
 % Bestimmung der Regelparameter KR,Tn,Tv nach dem ausgewählten Verfahren
