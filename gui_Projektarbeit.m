@@ -410,8 +410,8 @@ totzeitTt = handles.totzeitTt;
 
 % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
 % zurückgegeben
-[Tu,Ta] = Bestimmung_Wendetangente(konstanteK,zeitkonstanteT1,zeitkonstanteT2);
-
+[Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,handles.stopTime);
+%[Tu,Ta] = Bestimmung_Wendetangente(konstanteK,zeitkonstanteT1,zeitkonstanteT2);
 % Abfrage, welcher Regler im Popup-Menü angewählt wurde -> gewählter Regler
 % steht als String in selectedItemController
 contentReglerPopupMenu = get(handles.popupmenu_Regler,'String');
@@ -477,7 +477,7 @@ assignin('base','GsDenom',GsDenominator); % Nenner ÜF Regelstrecke
 assignin('base','TransportDelay',TransportDelay); % Totzeit Tt der Regelstrecke
 
 % Simulink Projekt 'pidProj' öffnen
-open_system('C:\Users\David\GitRepo\pidProj.slx')
+load_system('C:\Users\David\GitRepo\pidProj.slx')
 
 % Start- und Stoppzeit Parameter der Simulation setzen
 % Default-Werte setzen: startTime = 0; stopTime = 30; -> diese Werte

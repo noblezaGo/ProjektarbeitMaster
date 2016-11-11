@@ -1,7 +1,7 @@
-% Projektarbeit 
+% Bestimmung Wendetangente symbolisch
 function [Tu,Ta] =  Bestimmung_Wendetangente(K,T1,T2)
-syms t;
-s = tf('s');
+syms s t;
+
 
 % Zeitkonstante Zähler Regelstrecke
 %K = 1;
@@ -48,12 +48,12 @@ if(dh3dtWPxNum==0)
     % Throw Error
 end
 
-% figure(1);
-% % Plot Sprungantwort
+figure(2);
+% Plot Sprungantwort
 % fplot(h,[0,20]);
 % hold on;
 WPyNum =double(subs(h,t,WPxNum));
-% Plot Wendepunkt
+%Plot Wendepunkt
 % plot(WPxNum,WPyNum,'+');
 
 % Bestimmung der Wendetamgente
