@@ -22,7 +22,7 @@ function varargout = gui_Projektarbeit(varargin)
 
 % Edit the above text to modify the response to help gui_Projektarbeit
 
-% Last Modified by GUIDE v2.5 10-Nov-2016 10:55:07
+% Last Modified by GUIDE v2.5 17-Nov-2016 17:08:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -70,6 +70,8 @@ ylabel('y(t)');
 % Einträge Popupmenü-Verfahren setzen
 % set(handles.popupmenu_Verfahren, 'String', 'ziegler')
 
+
+
 % Choose default command line output for gui_Projektarbeit
 handles.output = hObject;
 
@@ -114,8 +116,8 @@ switch selectedItemVerfahren
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
     case 'Ziegler-Nichols'
-        set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
-        set(handles.popupmenu_Regler, 'Value', 1);
+        set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'}); % Reglerauswahl geben
+        set(handles.popupmenu_Regler, 'Value', 1); % default geben
     % Wenn CHR als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
@@ -136,7 +138,6 @@ end
         
 set(handles.popupmenu_Regler,'Enable','on'); 
 
-handles.selectedItemVerfahren = selectedItemVerfahren;
 guidata(hObject,handles);
 end
 
@@ -151,7 +152,6 @@ function popupmenu_Verfahren_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
     
-    
 end
 end
 
@@ -164,20 +164,6 @@ function popupmenu_Regler_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_Regler contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu_Regler
-
-% contents enthält cell array mit Inhalten des Popup-Menüs
-% contents = get(hObject,'String');
-
-% get(hObject,'Value') gibt Nummer des ausgewählten Eintrages zurück
-% selectedItemController enthält ausgewähltes Berechnungsverfahren
-% selectedItemController = contents{get(hObject,'Value')};
-% 
-% handles.selectedItemController = selectedItemController;
-
-
-% TO DO
-% Blockschaltbild des ausgewählten Reglers einfügen
-% guidata(hObject,handles);
 
 end
 
@@ -195,16 +181,13 @@ end
 end
 
 
-function edit_konstanteK_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_konstanteK (see GCBO)
+function editKonstanteK_Callback(hObject, eventdata, handles)
+% hObject    handle to editKonstanteK (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit_konstanteK as text
-%        str2double(get(hObject,'String')) returns contents of edit_konstanteK as a double
-% K wird eingelesen
-konstanteK = str2double(get(hObject,'String'));
-handles.konstanteK = konstanteK;
+% Hints: get(hObject,'String') returns contents of editKonstanteK as text
+%        str2double(get(hObject,'String')) returns contents of editKonstanteK as a double
 
 % TO DO
 % Error Handling 
@@ -215,8 +198,8 @@ guidata(hObject,handles);
 end
 
 % --- Executes during object creation, after setting all properties.
-function edit_konstanteK_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_konstanteK (see GCBO)
+function editKonstanteK_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editKonstanteK (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -228,17 +211,14 @@ end
 end
 
 
-function edit_zeitkonstanteT1_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_zeitkonstanteT1 (see GCBO)
+function editZeitkonstanteT1_Callback(hObject, eventdata, handles)
+% hObject    handle to editZeitkonstanteT1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit_zeitkonstanteT1 as text
-%        str2double(get(hObject,'String')) returns contents of edit_zeitkonstanteT1 as a double
+% Hints: get(hObject,'String') returns contents of editZeitkonstanteT1 as text
+%        str2double(get(hObject,'String')) returns contents of editZeitkonstanteT1 as a double
 
-% T1 einlesen
-zeitkonstanteT1 = str2double(get(hObject,'String'));
-handles.zeitkonstanteT1 = zeitkonstanteT1;
 
 % TO DO 
 % ERROR HANDLING nur Nummern fürfen eingegeben werden
@@ -248,8 +228,8 @@ guidata(hObject,handles);
 end
 
 % --- Executes during object creation, after setting all properties.
-function edit_zeitkonstanteT1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_zeitkonstanteT1 (see GCBO)
+function editZeitkonstanteT1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editZeitkonstanteT1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -261,28 +241,18 @@ end
 end
 
 
-function edit_ZeitkonstanteT2_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_ZeitkonstanteT2 (see GCBO)
+function editZeitkonstanteT2_Callback(hObject, eventdata, handles)
+% hObject    handle to editZeitkonstanteT2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit_ZeitkonstanteT2 as text
-%        str2double(get(hObject,'String')) returns contents of edit_ZeitkonstanteT2 as a double
-
-% T2 einlesen
-zeitkonstanteT2 = str2double(get(hObject,'String'));
-handles.zeitkonstanteT2 = zeitkonstanteT2;
-
-% TO DO 
-% ERROR HANDLING nur Nummern fürfen eingegeben werden
-
-% guidata updaten
-guidata(hObject,handles);
+% Hints: get(hObject,'String') returns contents of editZeitkonstanteT2 as text
+%        str2double(get(hObject,'String')) returns contents of editZeitkonstanteT2 as a double
 end
 
 % --- Executes during object creation, after setting all properties.
-function edit_ZeitkonstanteT2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_ZeitkonstanteT2 (see GCBO)
+function editZeitkonstanteT2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editZeitkonstanteT2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -293,23 +263,21 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 end
 
-function TransportDelay_Callback(hObject, eventdata, handles)
-% hObject    handle to TransportDelay (see GCBO)
+function editTransportDelay_Callback(hObject, eventdata, handles)
+% hObject    handle to editTransportDelay (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of TransportDelay as text
-%        str2double(get(hObject,'String')) returns contents of TransportDelay as a double
-
-handles.totzeitTt = str2double(get(hObject,'String'));
+% Hints: get(hObject,'String') returns contents of editTransportDelay as text
+%        str2double(get(hObject,'String')) returns contents of editTransportDelay as a double
 
 % guidata updaten
 guidata(hObject,handles);
 end
 
 % --- Executes during object creation, after setting all properties.
-function TransportDelay_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to TransportDelay (see GCBO)
+function editTransportDelay_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editTransportDelay (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -342,22 +310,19 @@ guidata(hObject,handles);
 end
 
 
-function EditSimulationStartTime_Callback(hObject, eventdata, handles)
-% hObject    handle to EditSimulationStartTime (see GCBO)
+function editSimulationStartTime_Callback(hObject, eventdata, handles)
+% hObject    handle to editSimulationStartTime (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of EditSimulationStartTime as text
-%        str2double(get(hObject,'String')) returns contents of EditSimulationStartTime as a double
-startTime = str2double(get(hObject,'String'));
-handles.startTime = startTime;
+% Hints: get(hObject,'String') returns contents of editSimulationStartTime as text
+%        str2double(get(hObject,'String')) returns contents of editSimulationStartTime as a double
 
-guidata(hObject,handles);
 end
 
 % --- Executes during object creation, after setting all properties.
-function EditSimulationStartTime_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to EditSimulationStartTime (see GCBO)
+function editSimulationStartTime_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editSimulationStartTime (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -369,23 +334,19 @@ end
 end
 
 
-function EditSimulationStopTime_Callback(hObject, eventdata, handles)
-% hObject    handle to EditSimulationStopTime (see GCBO)
+function editSimulationStopTime_Callback(hObject, eventdata, handles)
+% hObject    handle to editSimulationStopTime (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of EditSimulationStopTime as text
-%        str2double(get(hObject,'String')) returns contents of EditSimulationStopTime as a double
+% Hints: get(hObject,'String') returns contents of editSimulationStopTime as text
+%        str2double(get(hObject,'String')) returns contents of editSimulationStopTime as a double
 
-stopTime = str2double(get(hObject,'String'));
-handles.stopTime = stopTime;
-
-guidata(hObject,handles);
 end
 
 % --- Executes during object creation, after setting all properties.
-function EditSimulationStopTime_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to EditSimulationStopTime (see GCBO)
+function editSimulationStopTime_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editSimulationStopTime (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -402,38 +363,32 @@ function startbutton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Zuweisung der Parameter aus der struct handles
-konstanteK = handles.konstanteK;
-zeitkonstanteT1 = handles.zeitkonstanteT1;
-zeitkonstanteT2 = handles.zeitkonstanteT2;
-totzeitTt = handles.totzeitTt;
+%% Eingaben auslesen
+
+% Eingegebene Streckenparameter auslesen
+konstanteK = str2double(get(handles.editKonstanteK,'String'));
+zeitkonstanteT1 = str2double(get(handles.editZeitkonstanteT1,'String'));
+zeitkonstanteT2 = str2double(get(handles.editZeitkonstanteT2,'String'));
+totzeitTt = str2double(get(handles.editTransportDelay,'String'));
+
+% Eingegebenes Verfahren auslesen
+contentPopupmenuVerfahren = get(handles.popupmenu_Verfahren,'String');
+selectedItemVerfahren = contentPopupmenuVerfahren{get(handles.popupmenu_Verfahren,'Value')};
+
+% Eingegebener Regler auslesen
+contentPopupmenuRegler = get(handles.popupmenu_Regler,'String');
+selectedItemController = contentPopupmenuRegler{get(handles.popupmenu_Regler,'Value')};
+
+% Eingebene Simulationszeiten auslesen
+simulationStartTime = str2double(get(handles.editSimulationStartTime,'String'));
+simulationStopTime = str2double(get(handles.editSimulationStopTime,'String'));
+
+%%
 
 % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
 % zurückgegeben
-[Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,handles.stopTime);
-%[Tu,Ta] = Bestimmung_Wendetangente(konstanteK,zeitkonstanteT1,zeitkonstanteT2);
-% Abfrage, welcher Regler im Popup-Menü angewählt wurde -> gewählter Regler
-% steht als String in selectedItemController
-contentReglerPopupMenu = get(handles.popupmenu_Regler,'String');
-selectedItemController = contentReglerPopupMenu{get(handles.popupmenu_Regler,'Value')};
+[Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,simulationStopTime);
 
-% isfield frägt ob die gegebene Variable in der struct handle existiert:
-% Wenn nicht in Popup-Menü des Verfahrens und des Reglers geklickt wurde,
-% bevor der Startknopf gedrückt wird, ist selectedItemVerfahren und
-% selectedItemController nicht existent. Sie wurden im Callback nicht erstellt
-% -> Variablen müssen hier erstellt werden 
-
-if(isfield(handles,'selectedItemVerfahren'))    
-    selectedItemVerfahren = handles.selectedItemVerfahren;
-else
-    selectedItemVerfahren = 'Ziegler-Nichols';
-end
-
-% if(isfield(handles,'selectedItemController'))
-%     selectedItemController = handles.selectedItemController;
-% else 
-%     selectedItemController = 'P-Regler';
-% end
 
 
 % Bestimmung der Regelparameter KR,Tn,Tv nach dem ausgewählten Verfahren
@@ -461,46 +416,6 @@ else
 end
 Dparam = Tv;
 
-% Zähler ÜF der Regelstrecke
-GsNumerator = [konstanteK];
-% Nenner ÜF der Regelstrecke
-GsDenominator = [zeitkonstanteT1*zeitkonstanteT2 zeitkonstanteT1+zeitkonstanteT2 1];
-% Totzeit Strecke
-TransportDelay = totzeitTt;
-
-% Variablen, die Simulink benötigt, in base workspace schreiben
-assignin('base','P',Pparam); % P-Parameter des Reglers
-assignin('base','I',Iparam); % I-Parameter des Reglers
-assignin('base','D',Dparam); % D-Parameter des Reglers
-assignin('base','GsNum',GsNumerator); % Zähler ÜF Regelstrecke
-assignin('base','GsDenom',GsDenominator); % Nenner ÜF Regelstrecke
-assignin('base','TransportDelay',TransportDelay); % Totzeit Tt der Regelstrecke
-
-% Simulink Projekt 'pidProj' öffnen
-load_system('C:\Users\David\GitRepo\pidProj.slx')
-
-% Start- und Stoppzeit Parameter der Simulation setzen
-% Default-Werte setzen: startTime = 0; stopTime = 30; -> diese Werte
-% gelten, wenn nichts selbst eingetragen wird
-if(isfield(handles,'startTime'))
-    startTime = handles.startTime;
-else startTime = 0;
-end
-
-if(isfield(handles,'stopTime'))
-    stopTime = handles.stopTime;
-else stopTime = 30;
-end
-    
-set_param('pidProj', 'StartTime', num2str(startTime));
-set_param('pidProj', 'StopTime', num2str(stopTime));
-
-% Simulink Simulation starten
-sim('C:\Users\David\GitRepo\pidProj.slx');
-
-
-
-
 
 % Ausgabe der berechneten Reglerparameter P,I,D
 set(handles.TextCalculatedP, 'String',['P = ' num2str(Pparam)]);
@@ -523,7 +438,9 @@ axes(handles.axes1);
 
 %systemlegend = ['System1'; 'System2'];
 hold all;
-plot(step_response.Time,step_response.Data, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
+simulationTime = simulationStartTime : 0.01 : simulationStopTime;
+step(transferFunctionSystemTotal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,Pparam,Iparam,Dparam,totzeitTt),simulationTime);
+% plot(step_response.Time,step_response.Data, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
 %hold on;
 legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
 %plot(step_response.Time,step_response.Time.^2);
@@ -536,9 +453,18 @@ legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende d
 
 % legend(num2str(systemlegend));
 
-%asdasd
+
 
 end
+
+
+
+
+
+
+
+
+
 
 
 
