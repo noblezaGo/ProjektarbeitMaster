@@ -57,9 +57,14 @@ function gui_Projektarbeit_OpeningFcn(hObject, eventdata, handles, varargin)
 set(handles.popupmenu_Regler,'Enable','off'); 
 % Streckenübertragungsfunktion anzeigen
 axes(handles.axes2);
-G1=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionStreckeTForm','png');   % Einlesen der Grafik 
-image (G1);        % Grafik ausgeben
+grafikUebertragungsfunktionStrecke=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionStreckeTForm','png');   % Einlesen der Grafik 
+image (grafikUebertragungsfunktionStrecke);        % Grafik ausgeben
 axis off 
+
+axes(handles.axes3);
+grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik 
+image(grafikUebertragungsfunktionRegler);
+axis off
 
 % Plot beschriften
 axes(handles.axes1);
@@ -118,21 +123,46 @@ switch selectedItemVerfahren
     case 'Ziegler-Nichols'
         set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'}); % Reglerauswahl geben
         set(handles.popupmenu_Regler, 'Value', 1); % default geben
+        
+        % Grafik der Übertragungsfunktion des P-Reglers anzeigen
+        axes(handles.axes3);
+        grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik
+        image(grafikUebertragungsfunktionRegler);
+        axis off
     % Wenn CHR als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
     case 'CHR'
         set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
         set(handles.popupmenu_Regler, 'Value', 1);
+        
+        % Grafik der Übertragungsfunktion des P-Reglers anzeigen
+        axes(handles.axes3);
+        grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik
+        image(grafikUebertragungsfunktionRegler);
+        axis off
+        
     % Wenn Kuhn normal oder schnell als Verfahren gewählt wurde, stehen als Regler
     % PI und PID zu Verfügung
     % Default-Einstellung ist PI-Regler
     case 'Kuhn normal'
         set(handles.popupmenu_Regler, 'String', {'PI-Regler','PID-Regler'});
         set(handles.popupmenu_Regler, 'Value', 1);
+        
+        % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
+        axes(handles.axes3);
+        grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIRegler','png');   % Einlesen der Grafik
+        image(grafikUebertragungsfunktionRegler);
+        axis off
     case 'Kuhn schnell'
         set(handles.popupmenu_Regler, 'String', {'PI-Regler','PID-Regler'});
         set(handles.popupmenu_Regler, 'Value', 1);
+        
+        % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
+        axes(handles.axes3);
+        grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIRegler','png');   % Einlesen der Grafik
+        image(grafikUebertragungsfunktionRegler);
+        axis off
 end
         
         
@@ -164,6 +194,24 @@ function popupmenu_Regler_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_Regler contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu_Regler
+
+contents = cellstr(get(hObject,'String'));
+selectedController = contents{get(hObject,'Value')};
+
+axes(handles.axes3);
+
+switch selectedController
+    case 'P-Regler'        
+    grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik 
+
+    case 'PI-Regler'
+    grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIRegler','png');   % Einlesen der Grafik 
+    
+    case 'PID-Regler'
+    grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIDRegler','png');   % Einlesen der Grafik 
+end
+    image (grafikUebertragungsfunktionRegler);      
+axis off 
 
 end
 
@@ -383,27 +431,27 @@ selectedItemController = contentPopupmenuRegler{get(handles.popupmenu_Regler,'Va
 simulationStartTime = str2double(get(handles.editSimulationStartTime,'String'));
 simulationStopTime = str2double(get(handles.editSimulationStopTime,'String'));
 
-%%
-
-% Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
-% zurückgegeben
-[Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,simulationStopTime);
-
+%% Bestimmung der Reglerparameter Kr,Tn,Tv
 
 
 % Bestimmung der Regelparameter KR,Tn,Tv nach dem ausgewählten Verfahren
 % ausgewählter Regler wird als Parameter 'selectedItemController' übergeben
 switch selectedItemVerfahren
     case 'Ziegler-Nichols'
+        % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+        % zurückgegeben
+        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,simulationStopTime);
         [Kr,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
     case 'CHR'
+        % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+        % zurückgegeben
+        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,simulationStopTime);
         [Kr,Tn,Tv] = CHR(konstanteK,Ta,Tu,selectedItemController);
     case 'Kuhn normal'
         [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
     case 'Kuhn schnell'
         [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
 end
-
 
 
 % Ausgabe der berechneten Reglerparameter P,I,D
@@ -428,11 +476,11 @@ axes(handles.axes1);
 %systemlegend = ['System1'; 'System2'];
 hold all;
 simulationTime = simulationStartTime : 0.01 : simulationStopTime;
-step(transferFunctionSystemTotal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,Kr,Tn,Tv,totzeitTt),simulationTime);
-% plot(step_response.Time,step_response.Data, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
-%hold on;
+[y,t] = step(transferFunctionSystemTotal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,Kr,Tn,Tv,totzeitTt),simulationTime);
+plot(t,y, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
+
 legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
-%plot(step_response.Time,step_response.Time.^2);
+
 
 % systemlegend = [];
 % for i= 1:handles.AnzahlStartButtonPushed
