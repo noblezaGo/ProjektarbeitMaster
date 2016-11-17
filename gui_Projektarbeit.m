@@ -395,32 +395,21 @@ simulationStopTime = str2double(get(handles.editSimulationStopTime,'String'));
 % ausgewählter Regler wird als Parameter 'selectedItemController' übergeben
 switch selectedItemVerfahren
     case 'Ziegler-Nichols'
-        [KR,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
+        [Kr,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
     case 'CHR'
-        [KR,Tn,Tv] = CHR(konstanteK,Ta,Tu,selectedItemController);
+        [Kr,Tn,Tv] = CHR(konstanteK,Ta,Tu,selectedItemController);
     case 'Kuhn normal'
-        [KR,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
+        [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
     case 'Kuhn schnell'
-        [KR,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
+        [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
 end
 
-% Regler
-% P,I,D stehen als Parameter im Simulink Block 'PID-Regler'
-Pparam= KR;
-
-% Fallunterscheidung ob Tn==0, denn Tn steht im Nenner bei Berechnung von I
-if(Tn==0)   
-    Iparam = 0;
-else
-    Iparam = 1/Tn;
-end
-Dparam = Tv;
 
 
 % Ausgabe der berechneten Reglerparameter P,I,D
-set(handles.TextCalculatedP, 'String',['P = ' num2str(Pparam)]);
-set(handles.TextCalculatedI, 'String',['I = ' num2str(Iparam)]);
-set(handles.TextCalculatedD, 'String',['D = ' num2str(Dparam)]);
+set(handles.TextCalculatedP, 'String',['K = ' num2str(Kr)]);
+set(handles.TextCalculatedI, 'String',['Tn = ' num2str(Tn)]);
+set(handles.TextCalculatedD, 'String',['Tv = ' num2str(Tv)]);
 
 % Abrage, wie oft der Start-Button gedrückt wurde, um Anzahl an Plots in
 % der figure bestimmen zu können-> nötig für 'legend'
@@ -439,7 +428,7 @@ axes(handles.axes1);
 %systemlegend = ['System1'; 'System2'];
 hold all;
 simulationTime = simulationStartTime : 0.01 : simulationStopTime;
-step(transferFunctionSystemTotal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,Pparam,Iparam,Dparam,totzeitTt),simulationTime);
+step(transferFunctionSystemTotal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,Kr,Tn,Tv,totzeitTt),simulationTime);
 % plot(step_response.Time,step_response.Data, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
 %hold on;
 legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
