@@ -22,7 +22,7 @@ function varargout = gui_Projektarbeit(varargin)
 
 % Edit the above text to modify the response to help gui_Projektarbeit
 
-% Last Modified by GUIDE v2.5 17-Nov-2016 17:08:54
+% Last Modified by GUIDE v2.5 18-Nov-2016 11:09:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -132,7 +132,17 @@ switch selectedItemVerfahren
     % Wenn CHR als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
-    case 'CHR'
+    case 'CHR periodischer Regelverlauf'
+        set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
+        set(handles.popupmenu_Regler, 'Value', 1);
+        
+        % Grafik der Übertragungsfunktion des P-Reglers anzeigen
+        axes(handles.axes3);
+        grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik
+        image(grafikUebertragungsfunktionRegler);
+        axis off
+        
+    case 'CHR aperiodischer Regelverlauf'
         set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
         set(handles.popupmenu_Regler, 'Value', 1);
         
@@ -442,11 +452,17 @@ switch selectedItemVerfahren
         % zurückgegeben
         [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,simulationStopTime);
         [Kr,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
-    case 'CHR'
+    case 'CHR periodischer Regelverlauf'
         % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
         % zurückgegeben
         [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,simulationStopTime);
-        [Kr,Tn,Tv] = CHR(konstanteK,Ta,Tu,selectedItemController);
+        [Kr,Tn,Tv] = CHR_periodisch(konstanteK,Ta,Tu,selectedItemController);
+   case 'CHR aperiodischer Regelverlauf'
+        % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+        % zurückgegeben
+        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,simulationStopTime);
+        [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
+        
     case 'Kuhn normal'
         [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
     case 'Kuhn schnell'
@@ -493,15 +509,3 @@ legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende d
 
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
