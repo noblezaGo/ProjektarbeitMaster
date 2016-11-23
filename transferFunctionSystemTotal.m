@@ -1,11 +1,10 @@
-% Funktion gibt Übertragungsfunktion Gtotal des Reglers zurück
+% Funktion gibt Übertragungsfunktion Gtotal des geschlossenen Regelkreises zurück
 function[Gtotal] = transferFunctionSystemTotal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,Kr,Tn,Tv,TransportDelay)
 s = tf('s');
 
 %% Übertragungsfunktion der Strecke
 Gs = konstanteK/((zeitkonstanteT1*s+1)*(zeitkonstanteT2*s+1)) * exp(-s*TransportDelay);
-% TO DO: Iparam nicht verwenden sonder Tv -> Änderung in
-% gui_Projektarbeit.m
+
 
 %% Übertragungsfunktion des Reglers
 T1 = 1; % Zeitkonstante des Tiefpasses im D-Anteil

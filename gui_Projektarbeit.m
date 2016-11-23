@@ -22,7 +22,7 @@ function varargout = gui_Projektarbeit(varargin)
 
 % Edit the above text to modify the response to help gui_Projektarbeit
 
-% Last Modified by GUIDE v2.5 18-Nov-2016 11:09:28
+% Last Modified by GUIDE v2.5 22-Nov-2016 10:50:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -508,4 +508,29 @@ legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende d
 
 
 
+end
+
+
+% --- Executes on selection change in popupmenu_AuswahlStrecke.
+function popupmenu_AuswahlStrecke_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_AuswahlStrecke (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_AuswahlStrecke contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_AuswahlStrecke
+gui_EingabeStreckenparameter
+end
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_AuswahlStrecke_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_AuswahlStrecke (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
 end
