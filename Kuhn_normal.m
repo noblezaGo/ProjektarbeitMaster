@@ -1,9 +1,15 @@
 % T-Summenregel nach Kuhn normal
-function[Kr,Tn,Tv] = Kuhn_normal(Ks,T1,T2,selectedController)
+function[Kr,Tn,Tv] = Kuhn_normal(Ks,zeitkonstantenT,selectedController)
 % TO DO
 
+zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
+
+T1 = zeitkonstantenT(1);
+T2 = zeitkonstantenT(2);
+T3 = zeitkonstantenT(3);
+
 % Summenzeitkonstante bilden
-TSum = T1+T2;
+TSum = T1+T2+T3;
 
 % % selectedController enthält den über das Popup-Menü ausgewählten Regler
 switch selectedController

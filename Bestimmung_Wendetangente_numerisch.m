@@ -1,39 +1,41 @@
+% TO DO: WT wird ohne Totzeit bestimmt! Falsch!
+
 % Bestimmung Wendetangente numerisch
-function [Tu,Ta] =  Bestimmung_Wendetangente(K,T1,T2,simulationTime)
-
-s = tf('s');
+function [Tu,Ta] =  Bestimmung_Wendetangente_numerisch(K,zeitkonstantenT,totzeitTt,simulationTime)
 
 
-% Zeitkonstante Zähler Regelstrecke
-%K = 1;
 
-% Zeitkonstante T1 und T2 Nenner Regelstrecke
-% T1 : Zeitkonstante1 der Strecke
-% T2 : Zeitkonstante2 der Strecke
+%s = tf('s');
 
-% Berechnung der Wendetangente für Ziegler-Nichols / CHR
+% NaN ersetzen durch 0
+% Wenn die Strecke z.B. nur eine Zeitkonstante enthält, ist zeitkonstantenT(2) und zeitkonstantenT(3) = NaN 
+zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
 
-%F = K/(T^2*s^2+2*Daempfung*T*s+1);
+T1 = zeitkonstantenT(1);
+T2 = zeitkonstantenT(2);
+T3 = zeitkonstantenT(3);
 
-% Übertragungsfkt
-% G = K/((T1*s+1) * (T2*s+1));
-
-% Sprungantwort
-% H = @(s) K/((T1*s+1) * (T2*s+1)*s);
+% allg. Formel der Übertragungsfkt PTn
+% PT1-Strecke: T2==0, T3==0
+% PT2-Strecke: T3==0
+%Gs = K/((1+T1*s)*(1+T2*s)*(1+T3*s)) * exp(-s*totzeitTt);
 
 % H wird definiert als anonyme Funktion
-H = @(s) K/((T1*s+1) * (T2*s+1)*s);
+H = @(s) K/((1+T1*s)*(1+T2*s)*(1+T3*s) * s) * exp(-s*totzeitTt);
+%K/((T1*s+1) * (T2*s+1)*s);
 
-% Sprungantwort in Zeitbereich wandeln
+%% Sprungantwort in Zeitbereich wandeln
 
 % Zeitvektor, über den die inverse Laplace-Transformation gemacht wird
+% Start von time bei 0.01, da inverse Laplace-Transformation von 0 nicht
+% existiert
 dt = 0.01;
 time = 0.01:dt:simulationTime;
 
 % Funktion talbot_inversion führt numerische Laplace-Transformation durch
 h = talbot_inversion(H,time);
 
-% Wendepunkt berechnen -> größte Steigung
+%% Wendepunkt berechnen -> größte Steigung
 dh = zeros(length(h)-1,1);
 for i=1:1:length(h)-1
     dh(i) = h(i+1)-h(i);
@@ -43,15 +45,16 @@ end
 WPx = time(index);
 WPy = h(index);
 
-% figure(1);
+% figure(3);
 % % Plot Sprungantwort
 % plot(time,h);
 % hold on;
 % % WPyNum =double(subs(h,t,WPxNum));
 % % Plot Wendepunkt
 % plot(WPx,WPy,'+');
-% 
-% % Bestimmung der Wendetangente
+
+
+%% Bestimmung der Wendetangente
 % Schnittpunkt cWT der Wendetangente mit der y-Achse mit Koordinaten des
 % Wendepunktes WPx, WPy und der Steigung dWP im Wendepunkt 
 
@@ -59,11 +62,12 @@ dWP = dhmax/dt; % Steigung berechnen, durch dt teilen da dhmax die Steigung im S
 cWT = WPy - dWP*WPx;
 
 % Funktion der Wendetangente
-tVec = 0:dt:simulationTime;
-WT = dWP*tVec + cWT;
+% tVec = 0:dt:simulationTime;
+% WT = dWP*tVec + cWT;
 % plot(tVec,WT);
 
-% % x-Koordinate des Schnittpunktes der Wendetangente mit x-Achse ist Zeit Tu
+%% Bestimmung von Tu und Ta
+%  x-Koordinate des Schnittpunktes der Wendetangente mit x-Achse ist Zeit Tu
 % Nullstelle der Funktion WT -> WT == 0
 Tu = -cWT/dWP;
 

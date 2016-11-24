@@ -421,13 +421,19 @@ function startbutton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+konstanteK = handles.konstanteK;
+zeitkonstantenT = handles.zeitkonstantenT;
+totzeitTt = handles.totzeitTt;
+
 %% Eingaben auslesen
 
 % Eingegebene Streckenparameter auslesen
-konstanteK = str2double(get(handles.editKonstanteK,'String'));
-zeitkonstanteT1 = str2double(get(handles.editZeitkonstanteT1,'String'));
-zeitkonstanteT2 = str2double(get(handles.editZeitkonstanteT2,'String'));
-totzeitTt = str2double(get(handles.editTransportDelay,'String'));
+% konstanteK = str2double(get(handles.editKonstanteK,'String'));
+% zeitkonstanteT1 = str2double(get(handles.editZeitkonstanteT1,'String'));
+% zeitkonstanteT2 = str2double(get(handles.editZeitkonstanteT2,'String'));
+% totzeitTt = str2double(get(handles.editTransportDelay,'String'));
+
+
 
 % Eingegebenes Verfahren auslesen
 contentPopupmenuVerfahren = get(handles.popupmenu_Verfahren,'String');
@@ -450,23 +456,23 @@ switch selectedItemVerfahren
     case 'Ziegler-Nichols'
         % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
         % zurückgegeben
-        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,simulationStopTime);
+        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
         [Kr,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
     case 'CHR periodischer Regelverlauf'
         % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
         % zurückgegeben
-        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,simulationStopTime);
+        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
         [Kr,Tn,Tv] = CHR_periodisch(konstanteK,Ta,Tu,selectedItemController);
    case 'CHR aperiodischer Regelverlauf'
         % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
         % zurückgegeben
-        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstanteT1,zeitkonstanteT2,simulationStopTime);
+        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
         [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
         
     case 'Kuhn normal'
-        [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
+        [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstantenT,selectedItemController);
     case 'Kuhn schnell'
-        [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstanteT1,zeitkonstanteT2,selectedItemController);
+        [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstantenT,selectedItemController);
 end
 
 
@@ -475,6 +481,17 @@ set(handles.TextCalculatedP, 'String',['K = ' num2str(Kr)]);
 set(handles.TextCalculatedI, 'String',['Tn = ' num2str(Tn)]);
 set(handles.TextCalculatedD, 'String',['Tv = ' num2str(Tv)]);
 
+%% Bestimmung der Übertragungsfunktion Gr des Reglers
+Gr = transferFcnController(Kr,Tn,Tv);
+
+%% Bestimmung der Übertragungsfunktion Gs der Strecke
+Gs = transferFcnControlledSystem(konstanteK,zeitkonstantenT,totzeitTt);
+
+%% Bestimmung der Übertragungsfunktion des geschlossenen Regelkreises
+Gtot = Gr*Gs/(1+Gr*Gs);
+
+%% Erstellung des Plots 
+
 % Abrage, wie oft der Start-Button gedrückt wurde, um Anzahl an Plots in
 % der figure bestimmen zu können-> nötig für 'legend'
 if(isfield(handles,'AnzahlStartButtonPushed')) 
@@ -482,7 +499,7 @@ if(isfield(handles,'AnzahlStartButtonPushed'))
 else 
     handles.AnzahlStartButtonPushed = 1;
 end 
-guidata(hObject,handles)
+
 
 % Plot der Sprungantwort in Axes1
 axes(handles.axes1);
@@ -492,7 +509,8 @@ axes(handles.axes1);
 %systemlegend = ['System1'; 'System2'];
 hold all;
 simulationTime = simulationStartTime : 0.01 : simulationStopTime;
-[y,t] = step(transferFunctionSystemTotal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,Kr,Tn,Tv,totzeitTt),simulationTime);
+% [y,t] = step(transferFunctionSystemTotal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,Kr,Tn,Tv,totzeitTt),simulationTime);
+[y,t] = step(Gtot,simulationTime);
 plot(t,y, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
 
 legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
@@ -507,7 +525,7 @@ legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende d
 % legend(num2str(systemlegend));
 
 
-
+guidata(hObject,handles)
 end
 
 
@@ -519,7 +537,15 @@ function popupmenu_AuswahlStrecke_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_AuswahlStrecke contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu_AuswahlStrecke
-gui_EingabeStreckenparameter
+
+contents = cellstr(get(hObject,'String'));
+handles.streckentyp = contents{get(hObject,'Value')};
+
+gui_Strecke(hObject);
+
+
+
+guidata(hObject,handles);
 end
 
 % --- Executes during object creation, after setting all properties.
