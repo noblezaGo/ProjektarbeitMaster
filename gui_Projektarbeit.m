@@ -22,7 +22,7 @@ function varargout = gui_Projektarbeit(varargin)
 
 % Edit the above text to modify the response to help gui_Projektarbeit
 
-% Last Modified by GUIDE v2.5 22-Nov-2016 10:50:08
+% Last Modified by GUIDE v2.5 30-Nov-2016 13:47:42
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -54,28 +54,59 @@ function gui_Projektarbeit_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   unrecognized PropertyName/PropertyValue pairs from the
 %            command line (see VARARGIN)
 
-set(handles.popupmenu_Regler,'Enable','off'); 
-% Streckenübertragungsfunktion anzeigen
-axes(handles.axes2);
-grafikUebertragungsfunktionStrecke=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionStreckeTForm','png');   % Einlesen der Grafik 
-image (grafikUebertragungsfunktionStrecke);        % Grafik ausgeben
-axis off 
+handles.popupmenu_Regler.Enable = 'off';
+%% Anzeige Grafik P-Regler
+handles.grafikUebertragungsfunktionPRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik 
+ % Bildgröße bestimmen
+ % heightImgPRegler: Höhe der Grafik
+ % widthImgPRegler: Breite der Grafik
+[heightImgPRegler,widthImgPRegler,dimImgPRegler] = size(handles.grafikUebertragungsfunktionPRegler);
 
-axes(handles.axes3);
-grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik 
-image(grafikUebertragungsfunktionRegler);
+% Subpanel mit der Größe des Bildes des P-Reglers erstellen
+handles.subpanelPRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[220,35,widthImgPRegler,heightImgPRegler]);
+% Axes wird in Subpanel erstellt
+handles.axesPRegler = axes(handles.subpanelPRegler,'Units','normalized','Position',[0,0,1,1]);
+% Bild wird in Axes angezeigt
+image(handles.axesPRegler,handles.grafikUebertragungsfunktionPRegler);
 axis off
+
+%% Anzeige Grafik PI-Regler
+handles.grafikUebertragungsfunktionPIRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIRegler','png');   % Einlesen der Grafik 
+ % Bildgröße bestimmen
+ % heightImgPIRegler: Höhe der Grafik
+ % widthImgPIRegler: Breite der Grafik
+[heightImgPIRegler,widthImgPIRegler,dimImgPIRegler] = size(handles.grafikUebertragungsfunktionPIRegler);
+
+% Subpanel mit der Größe des Bildes des P-Reglers erstellen
+handles.subpanelPIRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[150,17,widthImgPIRegler,heightImgPIRegler],'Visible','off');
+% Axes wird in Subpanel erstellt
+handles.axesPIRegler = axes(handles.subpanelPIRegler,'Units','normalized','Position',[0,0,1,1]);
+% Bild wird in Axes angezeigt
+image(handles.axesPIRegler,handles.grafikUebertragungsfunktionPIRegler);
+axis off
+
+
+%% Axes zur Anzeige Grafik PID-Regler
+handles.grafikUebertragungsfunktionPIDRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIDRegler','png');   % Einlesen der Grafik 
+ % Bildgröße bestimmen
+ % heightImgPIDRegler: Höhe der Grafik
+ % widthImgPIDRegler: Breite der Grafik
+[heightImgPIDRegler,widthImgPIDRegler,dimImgPIDRegler] = size(handles.grafikUebertragungsfunktionPIDRegler);
+
+% Axes wird in Subpanel erstellt
+handles.subpanelPIDRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[120,17,widthImgPIDRegler,heightImgPIDRegler],'Visible','off');
+% Bild wird in Axes angezeigt
+handles.axesPIDRegler = axes(handles.subpanelPIDRegler,'Units','normalized','Position',[0,0,1,1]);
+image(handles.axesPIDRegler,handles.grafikUebertragungsfunktionPIDRegler);
+axis off
+
+%% Figure zum Plotten der Sprungantwort
 
 % Plot beschriften
 axes(handles.axes1);
 title('Systemsprungantwort');
 xlabel('t in s');
 ylabel('y(t)');
-
-% Einträge Popupmenü-Verfahren setzen
-% set(handles.popupmenu_Verfahren, 'String', 'ziegler')
-
-
 
 % Choose default command line output for gui_Projektarbeit
 handles.output = hObject;
@@ -98,6 +129,52 @@ function varargout = gui_Projektarbeit_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 end
+
+% --- Executes on selection change in popupmenu_AuswahlStrecke.
+function popupmenu_AuswahlStrecke_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_AuswahlStrecke (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_AuswahlStrecke contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_AuswahlStrecke
+
+
+
+gui_Strecke(hObject);
+
+
+
+guidata(hObject,handles);
+end
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_AuswahlStrecke_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_AuswahlStrecke (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+end
+
+
+% --- Executes on button press in pushbutton_Streckenparameter.
+function pushbutton_Streckenparameter_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_Streckenparameter (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Das handle zu diesem pushbutton wird der GUI zur Eingabe der
+% Streckenparameter übergeben
+gui_Strecke(hObject);
+% Die eingegebenen Streckenparameter werden von der gui_Strecke im handle
+% "handles" gespeichert und stehen somit in diesem m-File zur Verfügung
+end
+
 
 
 % --- Executes on selection change in popupmenu_Verfahren.
@@ -125,10 +202,9 @@ switch selectedItemVerfahren
         set(handles.popupmenu_Regler, 'Value', 1); % default geben
         
         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
-        axes(handles.axes3);
-        grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik
-        image(grafikUebertragungsfunktionRegler);
-        axis off
+        handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'on';
+        
     % Wenn CHR als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
@@ -137,20 +213,17 @@ switch selectedItemVerfahren
         set(handles.popupmenu_Regler, 'Value', 1);
         
         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
-        axes(handles.axes3);
-        grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik
-        image(grafikUebertragungsfunktionRegler);
-        axis off
+        handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'on';
+
         
     case 'CHR aperiodischer Regelverlauf'
         set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
         set(handles.popupmenu_Regler, 'Value', 1);
         
         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
-        axes(handles.axes3);
-        grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik
-        image(grafikUebertragungsfunktionRegler);
-        axis off
+       handles.subpanelPIRegler.Visible = 'off';
+       handles.subpanelPRegler.Visible = 'on';
         
     % Wenn Kuhn normal oder schnell als Verfahren gewählt wurde, stehen als Regler
     % PI und PID zu Verfügung
@@ -160,19 +233,15 @@ switch selectedItemVerfahren
         set(handles.popupmenu_Regler, 'Value', 1);
         
         % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
-        axes(handles.axes3);
-        grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIRegler','png');   % Einlesen der Grafik
-        image(grafikUebertragungsfunktionRegler);
-        axis off
+        handles.subpanelPRegler.Visible = 'off';
+        handles.subpanelPIRegler.Visible = 'on';
     case 'Kuhn schnell'
         set(handles.popupmenu_Regler, 'String', {'PI-Regler','PID-Regler'});
         set(handles.popupmenu_Regler, 'Value', 1);
         
         % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
-        axes(handles.axes3);
-        grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIRegler','png');   % Einlesen der Grafik
-        image(grafikUebertragungsfunktionRegler);
-        axis off
+        handles.subpanelPRegler.Visible = 'off';
+        handles.subpanelPIRegler.Visible = 'on';
 end
         
         
@@ -208,20 +277,26 @@ function popupmenu_Regler_Callback(hObject, eventdata, handles)
 contents = cellstr(get(hObject,'String'));
 selectedController = contents{get(hObject,'Value')};
 
-axes(handles.axes3);
-
+%% Grafik der Reglerübertragungsfunktion
 switch selectedController
-    case 'P-Regler'        
-    grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik 
-
-    case 'PI-Regler'
-    grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIRegler','png');   % Einlesen der Grafik 
+    case 'P-Regler' 
+     % Grafik der Übertragungsfunktion des P-Reglers anzeigen
+    handles.subpanelPIRegler.Visible = 'off';
+    handles.subpanelPIDRegler.Visible = 'off';
+    handles.subpanelPRegler.Visible = 'on';
     
-    case 'PID-Regler'
-    grafikUebertragungsfunktionRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIDRegler','png');   % Einlesen der Grafik 
-end
-    image (grafikUebertragungsfunktionRegler);      
-axis off 
+    % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
+    case 'PI-Regler'
+    handles.subpanelPIDRegler.Visible = 'off';
+    handles.subpanelPRegler.Visible = 'off';
+    handles.subpanelPIRegler.Visible = 'on';
+   
+    % Grafik der Übertragungsfunktion des PID-Reglers anzeigen
+    case 'PID-Regler'       
+    handles.subpanelPRegler.Visible = 'off';
+    handles.subpanelPIRegler.Visible = 'off'; 
+    handles.subpanelPIDRegler.Visible = 'on';
+end        
 
 end
 
@@ -238,114 +313,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 end
 
-
-function editKonstanteK_Callback(hObject, eventdata, handles)
-% hObject    handle to editKonstanteK (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of editKonstanteK as text
-%        str2double(get(hObject,'String')) returns contents of editKonstanteK as a double
-
-% TO DO
-% Error Handling 
-% nur Nummern dürfen eingegeben werden
-
-% guidata updaten
-guidata(hObject,handles);
-end
-
-% --- Executes during object creation, after setting all properties.
-function editKonstanteK_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to editKonstanteK (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-end
-
-
-function editZeitkonstanteT1_Callback(hObject, eventdata, handles)
-% hObject    handle to editZeitkonstanteT1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of editZeitkonstanteT1 as text
-%        str2double(get(hObject,'String')) returns contents of editZeitkonstanteT1 as a double
-
-
-% TO DO 
-% ERROR HANDLING nur Nummern fürfen eingegeben werden
-
-% guidata updaten
-guidata(hObject,handles);
-end
-
-% --- Executes during object creation, after setting all properties.
-function editZeitkonstanteT1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to editZeitkonstanteT1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-end
-
-
-function editZeitkonstanteT2_Callback(hObject, eventdata, handles)
-% hObject    handle to editZeitkonstanteT2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of editZeitkonstanteT2 as text
-%        str2double(get(hObject,'String')) returns contents of editZeitkonstanteT2 as a double
-end
-
-% --- Executes during object creation, after setting all properties.
-function editZeitkonstanteT2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to editZeitkonstanteT2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-end
-
-function editTransportDelay_Callback(hObject, eventdata, handles)
-% hObject    handle to editTransportDelay (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of editTransportDelay as text
-%        str2double(get(hObject,'String')) returns contents of editTransportDelay as a double
-
-% guidata updaten
-guidata(hObject,handles);
-end
-
-% --- Executes during object creation, after setting all properties.
-function editTransportDelay_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to editTransportDelay (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-end
 
 
 % --- Executes on button press in pushbuttonClearFigure.
@@ -427,13 +394,9 @@ totzeitTt = handles.totzeitTt;
 
 %% Eingaben auslesen
 
-% Eingegebene Streckenparameter auslesen
-% konstanteK = str2double(get(handles.editKonstanteK,'String'));
-% zeitkonstanteT1 = str2double(get(handles.editZeitkonstanteT1,'String'));
-% zeitkonstanteT2 = str2double(get(handles.editZeitkonstanteT2,'String'));
-% totzeitTt = str2double(get(handles.editTransportDelay,'String'));
-
-
+% Eingegebener Streckentyp auslesen
+contentPopupmenuAuswahlStrecke = get(handles.popupmenu_AuswahlStrecke,'String');
+selectedItemStrecke = contentPopupmenuAuswahlStrecke{get(handles.popupmenu_AuswahlStrecke,'Value')}
 
 % Eingegebenes Verfahren auslesen
 contentPopupmenuVerfahren = get(handles.popupmenu_Verfahren,'String');
@@ -447,49 +410,68 @@ selectedItemController = contentPopupmenuRegler{get(handles.popupmenu_Regler,'Va
 simulationStartTime = str2double(get(handles.editSimulationStartTime,'String'));
 simulationStopTime = str2double(get(handles.editSimulationStopTime,'String'));
 
-%% Bestimmung der Reglerparameter Kr,Tn,Tv
+% Art des Plottes auslesen
+stateRadiobuttonPlotClosedLoop = get(handles.radiobuttonPlotStepClosedLoop,'Value');
+
+%% Abfrage, ob die Sprungantwort der Strecke oder des geschlossenen geregelten Kreises geplottet werden soll
+if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
+    %% Bestimmung der Reglerparameter Kr,Tn,Tv
+    % Bestimmung der Regelparameter KR,Tn,Tv nach dem ausgewählten Verfahren
+    % ausgewählter Regler wird als Parameter 'selectedItemController' übergeben
+    switch selectedItemVerfahren
+        case 'Ziegler-Nichols'
+            % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+            % zurückgegeben
+            [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
+            [Kr,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
+        case 'CHR periodischer Regelverlauf'
+            % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+            % zurückgegeben
+            [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
+            [Kr,Tn,Tv] = CHR_periodisch(konstanteK,Ta,Tu,selectedItemController);
+       case 'CHR aperiodischer Regelverlauf'
+            % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+            % zurückgegeben
+            [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
+            [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
+
+        case 'Kuhn normal'
+            [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstantenT,selectedItemController);
+        case 'Kuhn schnell'
+            [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstantenT,selectedItemController);
+    end
 
 
-% Bestimmung der Regelparameter KR,Tn,Tv nach dem ausgewählten Verfahren
-% ausgewählter Regler wird als Parameter 'selectedItemController' übergeben
-switch selectedItemVerfahren
-    case 'Ziegler-Nichols'
-        % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
-        % zurückgegeben
-        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
-        [Kr,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
-    case 'CHR periodischer Regelverlauf'
-        % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
-        % zurückgegeben
-        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
-        [Kr,Tn,Tv] = CHR_periodisch(konstanteK,Ta,Tu,selectedItemController);
-   case 'CHR aperiodischer Regelverlauf'
-        % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
-        % zurückgegeben
-        [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
-        [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
-        
-    case 'Kuhn normal'
-        [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstantenT,selectedItemController);
-    case 'Kuhn schnell'
-        [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstantenT,selectedItemController);
+    % Ausgabe der berechneten Reglerparameter P,I,D
+    set(handles.TextCalculatedP, 'String',['K = ' num2str(Kr)]);
+    set(handles.TextCalculatedI, 'String',['Tn = ' num2str(Tn)]);
+    set(handles.TextCalculatedD, 'String',['Tv = ' num2str(Tv)]);
+
+    %% Bestimmung der Übertragungsfunktion Gr des Reglers
+    Gr = transferFcnController(Kr,Tn,Tv);
+
+
+
+    %% Bestimmung der Übertragungsfunktion Gs der Strecke
+    Gs = transferFcnControlledSystem(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke);
+
+    %% Bestimmung der Übertragungsfunktion des geschlossenen Regelkreises
+    Gtot = Gr*Gs/(1+Gr*Gs);
+
+else
+    %% Sprungantwort der Strecke soll geplottet werden
+    % Bestimmung der Übertragungsfunktion Gs der Strecke
+    Gs = transferFcnControlledSystem(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke);
+    % Gesamtübertragungsfunktion Gtot wird geplottet, Gs wird Gtot
+    % zugewiesenen
+    Gtot = Gs;
+
+
 end
 
 
-% Ausgabe der berechneten Reglerparameter P,I,D
-set(handles.TextCalculatedP, 'String',['K = ' num2str(Kr)]);
-set(handles.TextCalculatedI, 'String',['Tn = ' num2str(Tn)]);
-set(handles.TextCalculatedD, 'String',['Tv = ' num2str(Tv)]);
-
-%% Bestimmung der Übertragungsfunktion Gr des Reglers
-Gr = transferFcnController(Kr,Tn,Tv);
-
-%% Bestimmung der Übertragungsfunktion Gs der Strecke
-Gs = transferFcnControlledSystem(konstanteK,zeitkonstantenT,totzeitTt);
-
-%% Bestimmung der Übertragungsfunktion des geschlossenen Regelkreises
-Gtot = Gr*Gs/(1+Gr*Gs);
-
+    
+    
 %% Erstellung des Plots 
 
 % Abrage, wie oft der Start-Button gedrückt wurde, um Anzahl an Plots in
@@ -529,34 +511,6 @@ guidata(hObject,handles)
 end
 
 
-% --- Executes on selection change in popupmenu_AuswahlStrecke.
-function popupmenu_AuswahlStrecke_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_AuswahlStrecke (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_AuswahlStrecke contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_AuswahlStrecke
-
-contents = cellstr(get(hObject,'String'));
-handles.streckentyp = contents{get(hObject,'Value')};
-
-gui_Strecke(hObject);
 
 
 
-guidata(hObject,handles);
-end
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_AuswahlStrecke_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_AuswahlStrecke (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-end

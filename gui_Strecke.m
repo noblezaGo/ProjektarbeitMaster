@@ -1,49 +1,96 @@
 % Diese GUI figure wird benutzt zur Einlesung der Streckenparameter
 
-% hObjectMain ist handle von popupmenu_AuswahlStrecke, von dort
+% hObjectMain ist handle von popupmenu_AuswahlStrecke oder pushbutton_Streckenparameter, von dort
 % wird gui_Strecke gecallt
 % parent von hObjectMain ist figure von gui_Projektarbeit
 
 function gui_Strecke(hObjectMain)
 
 % GUI-figure zur Eingabe der Streckenparameter
-fig = figure('position',[0 500 400 200],'MenuBar','none','Name','Streckenparameter','NumberTitle','off','OuterPosition',[230 150 570 400]);
+handles.fig = figure('position',[0 700 500 600],'MenuBar','none','Name','Streckenparameter','NumberTitle','off','OuterPosition',[230 150 650 400],'color','white');
 
 handles.hObjectMain = hObjectMain;
+handlesMain = guidata(hObjectMain);
 
-% Je nach gewählter Strecke anderes Bild von Übertragungsfukt anzeigen
+contentPopupmenu_AuswahlStrecke = get(handlesMain.popupmenu_AuswahlStrecke,'String');
+% Ausgewählten Streckentyp auslesen
+selectedControlledSystem = contentPopupmenu_AuswahlStrecke{get(handlesMain.popupmenu_AuswahlStrecke,'Value')};
+
+
+% TO Do: Andere Lösung finden als Bilder von Pfad einlesen -> funktioniert
+% auf anderem System nicht
+switch selectedControlledSystem
+    case 'PTn'
+        
+        grafikUebertragungsfunktionStrecke=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPTnStrecke','png');   % Einlesen der Grafik
+         % Größe der Grafik bestimmen
+         % hightImgStrecke: Höhe der Grafik
+         % widthImgStrecke: Breite der Grafik
+        [hightImgStrecke, widthImgStrecke, dimImgStrecke] = size(grafikUebertragungsfunktionStrecke) ;
+        % figure zur Anzeige der Formel der Übertragungsfunktion der Strecke
+        handles.ax1 = axes('Units','pixels','Position',[250,200,widthImgStrecke,hightImgStrecke]);
+        image(grafikUebertragungsfunktionStrecke);        % Grafik ausgeben
+        axis off
+        
+    case 'ITn'
+        
+        grafikUebertragungsfunktionStrecke=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionITnStrecke','png');   % Einlesen der Grafik
+         % Größe der Grafik bestimmen
+         % hightImgStrecke: Höhe der Grafik
+         % widthImgStrecke: Breite der Grafik
+        [hightImgStrecke, widthImgStrecke, dimImgStrecke] = size(grafikUebertragungsfunktionStrecke) ;
+        % figure zur Anzeige der Formel der Übertragungsfunktion der Strecke
+        handles.ax1 = axes('Units','pixels','Position',[250,200,widthImgStrecke,hightImgStrecke]);
+        image(grafikUebertragungsfunktionStrecke);        % Grafik ausgeben
+        axis off
+        
+    case 'DTn'
+        grafikUebertragungsfunktionStrecke=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionDTnStrecke','png');   % Einlesen der Grafik
+         % Größe der Grafik bestimmen
+         % hightImgStrecke: Höhe der Grafik
+         % widthImgStrecke: Breite der Grafik
+        [hightImgStrecke, widthImgStrecke, dimImgStrecke] = size(grafikUebertragungsfunktionStrecke) ;
+        % figure zur Anzeige der Formel der Übertragungsfunktion der Strecke
+        handles.ax1 = axes('Units','pixels','Position',[250,200,widthImgStrecke,hightImgStrecke]);
+        image(grafikUebertragungsfunktionStrecke);        % Grafik ausgeben
+        axis off
+        
+end
+
+
+
 
 %% Erstellung der Eingabe- und Textfelder
 % Popupmenü Anzahl Zeitkonstanten
-handles.textPopupmenuAnzahlT = uicontrol('style','text','position',[20 300 150 20],'FontSize',10,'String','Anzahl Zeitkonstanten T:');
-handles.popupmenuAnzahlT = uicontrol('style','popupmenu','position',[200 300 100 20],'String',{'0' '1' '2' '3'},'Callback',@popupmenu_AnzT_Callback);
+handles.textPopupmenuAnzahlT = uicontrol('style','text','position',[50 300 50 20],'FontSize',10,'BackgroundColor','white','String','n =');
+handles.popupmenuAnzahlT = uicontrol('style','popupmenu','position',[100 300 100 20],'String',{'0' '1' '2' '3'},'Callback',@popupmenu_AnzT_Callback);
 
 % Eingabe K
-handles.textK = uicontrol('style','text','position',[50 250 50 20],'FontSize',10,'String','K =');
-handles.editK = uicontrol('style','edit','position',[200 250 100 20]);
+handles.textK = uicontrol('style','text','position',[50 260 50 20],'FontSize',10,'BackgroundColor','white','String','K =');
+handles.editK = uicontrol('style','edit','position',[100 260 100 20]);
 
 % Eingabe Tt
-handles.textTt = uicontrol('style','text','position',[50 200 50 20],'FontSize',10,'String','Tt =');
-handles.editTt = uicontrol('style','edit','position',[200 200 100 20]);
+handles.textTt = uicontrol('style','text','position',[50 220 50 20],'FontSize',10,'BackgroundColor','white','String','Tt =');
+handles.editTt = uicontrol('style','edit','position',[100 220 100 20]);
 
 % Eingabe Zeitkonstante T1
-handles.textT1 = uicontrol('style','text','position',[50 150 50 20],'Visible','off','FontSize',10,'String','T1 =');
-handles.editT1 = uicontrol('style','edit','position',[200 150 100 20],'Visible','off');
+handles.textT1 = uicontrol('style','text','position',[50 180 50 20],'Visible','off','FontSize',10,'BackgroundColor','white','String','T1 =');
+handles.editT1 = uicontrol('style','edit','position',[100 180 100 20],'Visible','off');
 
 % Eingabe Zeitkonstante T2, wird unsichtbar erstellt
-handles.textT2 = uicontrol('style','text','position',[50 100 50 20],'Visible','off','FontSize',10,'String','T2 =');
+handles.textT2 = uicontrol('style','text','position',[50 140 50 20],'Visible','off','FontSize',10,'BackgroundColor','white','String','T2 =');
 %hg = get(textT2);
-handles.editT2 = uicontrol('style','edit','position',[200 100 100 20],'Visible','off');
+handles.editT2 = uicontrol('style','edit','position',[100 140 100 20],'Visible','off');
 
 % Eingabe Zeitonstante T3, wird unsichtbar erstellt
-handles.textT3 = uicontrol('style','text','position',[50 50 50 20],'Visible','off','FontSize',10,'String','T3 =');
-handles.editT3 = uicontrol('style','edit','position',[200 50 100 20],'Visible','off');
+handles.textT3 = uicontrol('style','text','position',[50 100 50 20],'Visible','off','BackgroundColor','white','FontSize',10,'String','T3 =');
+handles.editT3 = uicontrol('style','edit','position',[100 100 100 20],'Visible','off');
 
 % Button "Übernehmen"
-handles.buttonApply = uicontrol('style','pushbutton','position',[350 150 100 30],'String','Übernehmen','Callback',@pushbutton_Apply_Callback);
+handles.buttonApply = uicontrol('style','pushbutton','position',[200 50 100 30],'String','Übernehmen','Callback',@pushbutton_Apply_Callback);
 
 
-guidata(fig,handles);
+guidata(handles.fig,handles);
 
 end
 
@@ -139,7 +186,8 @@ T3 = str2double(get(handles.editT3,'String'));
 % Array aus den Zeitkonstanten 
 handlesMain.zeitkonstantenT = [T1 T2 T3];
 
-  
+% figure ausblenden
+handles.fig.Visible = 'off';
         
 
 % Aktualisierung der main handles von der figure gui_Projektarbeit
