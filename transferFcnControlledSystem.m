@@ -12,13 +12,13 @@ T2 = zeitkonstantenT(2);
 T3 = zeitkonstantenT(3);
 
 switch typeOfControlledSystem
-    case 'PTn'
+    case 'PTn-Strecke'
         Gs = konstanteK/((1+T1*s)*(1+T2*s)*(1+T3*s)) * exp(-s*totzeitTt);
 
-    case 'ITn'
+    case 'ITn-Strecke'
         Gs = konstanteK/(s*(1+T1*s)*(1+T2*s)*(1+T3*s)) * exp(-s*totzeitTt);
         
-    case 'DTn'
+    case 'DTn-Strecke'
         Gs = s*konstanteK/((1+T1*s)*(1+T2*s)*(1+T3*s)) * exp(-s*totzeitTt);
         
 

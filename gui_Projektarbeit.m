@@ -22,7 +22,7 @@ function varargout = gui_Projektarbeit(varargin)
 
 % Edit the above text to modify the response to help gui_Projektarbeit
 
-% Last Modified by GUIDE v2.5 30-Nov-2016 13:47:42
+% Last Modified by GUIDE v2.5 01-Dec-2016 16:45:41
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -56,7 +56,7 @@ function gui_Projektarbeit_OpeningFcn(hObject, eventdata, handles, varargin)
 
 handles.popupmenu_Regler.Enable = 'off';
 %% Anzeige Grafik P-Regler
-handles.grafikUebertragungsfunktionPRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPRegler','png');   % Einlesen der Grafik 
+handles.grafikUebertragungsfunktionPRegler=imread('UebertragungsfunktionPRegler','png');   % Einlesen der Grafik 
  % Bildgröße bestimmen
  % heightImgPRegler: Höhe der Grafik
  % widthImgPRegler: Breite der Grafik
@@ -71,7 +71,7 @@ image(handles.axesPRegler,handles.grafikUebertragungsfunktionPRegler);
 axis off
 
 %% Anzeige Grafik PI-Regler
-handles.grafikUebertragungsfunktionPIRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIRegler','png');   % Einlesen der Grafik 
+handles.grafikUebertragungsfunktionPIRegler=imread('UebertragungsfunktionPIRegler','png');   % Einlesen der Grafik 
  % Bildgröße bestimmen
  % heightImgPIRegler: Höhe der Grafik
  % widthImgPIRegler: Breite der Grafik
@@ -86,8 +86,8 @@ image(handles.axesPIRegler,handles.grafikUebertragungsfunktionPIRegler);
 axis off
 
 
-%% Axes zur Anzeige Grafik PID-Regler
-handles.grafikUebertragungsfunktionPIDRegler=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPIDRegler','png');   % Einlesen der Grafik 
+%% Anzeige Grafik PID-Regler
+handles.grafikUebertragungsfunktionPIDRegler=imread('UebertragungsfunktionPIDRegler','png');   % Einlesen der Grafik 
  % Bildgröße bestimmen
  % heightImgPIDRegler: Höhe der Grafik
  % widthImgPIDRegler: Breite der Grafik
@@ -99,6 +99,35 @@ handles.subpanelPIDRegler = uipanel(handles.panelRegler,'BackgroundColor','white
 handles.axesPIDRegler = axes(handles.subpanelPIDRegler,'Units','normalized','Position',[0,0,1,1]);
 image(handles.axesPIDRegler,handles.grafikUebertragungsfunktionPIDRegler);
 axis off
+
+%% Anzeige Grafik Sprungantwort Strecke
+handles.grafikSprungantwortStrecke = imread('SprungantwortStrecke','png');    % Einlesen der Grafik
+ % Bildgröße bestimmen
+ % heightImgSprungantwortStrecke: Höhe der Grafik
+ % widthImgSprungantwortStrecke: Breite der Grafik
+[heightImgSprungantwortStrecke,widthImgSprungantwortStrecke,dimImgSprungantwortStrecke] = size(handles.grafikSprungantwortStrecke);
+
+% Axes wird in Subpanel erstellt
+handles.subpanelSprungantwortStrecke = uipanel(handles.buttongroupPlot,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[263,21,widthImgSprungantwortStrecke,heightImgSprungantwortStrecke],'Visible','on');
+% Bild wird in Axes angezeigt
+handles.axesSprungantwortStrecke = axes(handles.subpanelSprungantwortStrecke,'Units','normalized','Position',[0,0,1,1]);
+image(handles.axesSprungantwortStrecke,handles.grafikSprungantwortStrecke);
+axis off
+
+%% Anzeige Grafik Sprungantwort geschlossener Regelkreis
+handles.grafikSprungantwortClosedLoop = imread('SprungantwortClosedLoop','png');
+% Bildgröße bestimmen
+ % heightImgSprungantwortClosedLoop: Höhe der Grafik
+ % widthImgSprungantwortClosedLoop: Breite der Grafik
+[heightImgSprungantwortClosedLoop,widthImgSprungantwortClosedLoop,dimImgSprungantwortClosedLoop] = size(handles.grafikSprungantwortClosedLoop);
+
+% Axes wird in Subpanel erstellt
+handles.subpanelSprungantwortClosedLoop = uipanel(handles.buttongroupPlot,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[263,16,widthImgSprungantwortClosedLoop,heightImgSprungantwortClosedLoop],'Visible','off');
+% Bild wird in Axes angezeigt
+handles.axesSprungantwortClosedLoop = axes(handles.subpanelSprungantwortClosedLoop,'Units','normalized','Position',[0,0,1,1]);
+image(handles.axesSprungantwortClosedLoop,handles.grafikSprungantwortClosedLoop);
+axis off
+
 
 %% Figure zum Plotten der Sprungantwort
 
@@ -511,6 +540,30 @@ guidata(hObject,handles)
 end
 
 
+% --- Executes on button press in radiobuttonPlotStepControlledSystem.
+function radiobuttonPlotStepControlledSystem_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobuttonPlotStepControlledSystem (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
+% Hint: get(hObject,'Value') returns toggle state of radiobuttonPlotStepControlledSystem
 
+% Grafik der Formel zur Sprungantwort Strecke anzeigen
+handles.subpanelSprungantwortClosedLoop.Visible = 'off';
+handles.subpanelSprungantwortStrecke.Visible = 'on';
 
+end
+
+% --- Executes on button press in radiobuttonPlotStepClosedLoop.
+function radiobuttonPlotStepClosedLoop_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobuttonPlotStepClosedLoop (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobuttonPlotStepClosedLoop
+
+% Grafik der Formel zur Sprungantwort des geschlossenen Regelkreises anzeigen
+handles.subpanelSprungantwortStrecke.Visible = 'off';
+handles.subpanelSprungantwortClosedLoop.Visible = 'on';
+
+end

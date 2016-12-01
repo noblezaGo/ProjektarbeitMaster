@@ -7,7 +7,7 @@
 function gui_Strecke(hObjectMain)
 
 % GUI-figure zur Eingabe der Streckenparameter
-handles.fig = figure('position',[0 700 500 600],'MenuBar','none','Name','Streckenparameter','NumberTitle','off','OuterPosition',[230 150 650 400],'color','white');
+handles.fig = figure('WindowStyle','modal','position',[0 700 500 600],'MenuBar','none','Name','Streckenparameter','NumberTitle','off','OuterPosition',[230 150 650 400],'color','white');
 
 handles.hObjectMain = hObjectMain;
 handlesMain = guidata(hObjectMain);
@@ -20,9 +20,9 @@ selectedControlledSystem = contentPopupmenu_AuswahlStrecke{get(handlesMain.popup
 % TO Do: Andere Lösung finden als Bilder von Pfad einlesen -> funktioniert
 % auf anderem System nicht
 switch selectedControlledSystem
-    case 'PTn'
-        
-        grafikUebertragungsfunktionStrecke=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPTnStrecke','png');   % Einlesen der Grafik
+    case 'PTn-Strecke'
+        grafikUebertragungsfunktionStrecke=imread('UebertragungsfunktionPTnStrecke','png'); 
+        %grafikUebertragungsfunktionStrecke=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPTnStrecke','png');   % Einlesen der Grafik
          % Größe der Grafik bestimmen
          % hightImgStrecke: Höhe der Grafik
          % widthImgStrecke: Breite der Grafik
@@ -32,9 +32,9 @@ switch selectedControlledSystem
         image(grafikUebertragungsfunktionStrecke);        % Grafik ausgeben
         axis off
         
-    case 'ITn'
+    case 'ITn-Strecke'
         
-        grafikUebertragungsfunktionStrecke=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionITnStrecke','png');   % Einlesen der Grafik
+        grafikUebertragungsfunktionStrecke=imread('UebertragungsfunktionITnStrecke','png');   % Einlesen der Grafik
          % Größe der Grafik bestimmen
          % hightImgStrecke: Höhe der Grafik
          % widthImgStrecke: Breite der Grafik
@@ -44,8 +44,8 @@ switch selectedControlledSystem
         image(grafikUebertragungsfunktionStrecke);        % Grafik ausgeben
         axis off
         
-    case 'DTn'
-        grafikUebertragungsfunktionStrecke=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionDTnStrecke','png');   % Einlesen der Grafik
+    case 'DTn-Strecke'
+        grafikUebertragungsfunktionStrecke=imread('UebertragungsfunktionDTnStrecke','png');   % Einlesen der Grafik
          % Größe der Grafik bestimmen
          % hightImgStrecke: Höhe der Grafik
          % widthImgStrecke: Breite der Grafik
