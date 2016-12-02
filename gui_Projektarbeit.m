@@ -22,7 +22,7 @@ function varargout = gui_Projektarbeit(varargin)
 
 % Edit the above text to modify the response to help gui_Projektarbeit
 
-% Last Modified by GUIDE v2.5 01-Dec-2016 16:45:41
+% Last Modified by GUIDE v2.5 02-Dec-2016 10:08:01
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -54,7 +54,20 @@ function gui_Projektarbeit_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   unrecognized PropertyName/PropertyValue pairs from the
 %            command line (see VARARGIN)
 
-handles.popupmenu_Regler.Enable = 'off';
+handles.popupmenuRegler.Enable = 'off';
+
+%% Text Popupmenü Strecke
+handles.textPopupmenuStrecke = {'PTn-Strecke','ITn-Strecke','DTn-Strecke'}
+handles.popupmenuStrecke.String = handles.textPopupmenuStrecke;
+
+%% Text Popupmenü Verfahren
+handles.textPopupmenuVerfahren = {'Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad'};
+handles.popupmenuVerfahren.String = handles.textPopupmenuVerfahren;
+
+%% Text Popupmenü Regler
+handles.textPopupmenuRegler = {'P-Regler','PI-Regler','PD-Regler','PID-Regler'}
+handles.popupmenuRegler.String = handles.textPopupmenuRegler;
+
 %% Anzeige Grafik P-Regler
 handles.grafikUebertragungsfunktionPRegler=imread('UebertragungsfunktionPRegler','png');   % Einlesen der Grafik 
  % Bildgröße bestimmen
@@ -159,27 +172,23 @@ function varargout = gui_Projektarbeit_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 end
 
-% --- Executes on selection change in popupmenu_AuswahlStrecke.
-function popupmenu_AuswahlStrecke_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_AuswahlStrecke (see GCBO)
+% --- Executes on selection change in popupmenuStrecke.
+function popupmenuStrecke_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenuStrecke (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_AuswahlStrecke contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_AuswahlStrecke
-
-
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenuStrecke contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenuStrecke
 
 gui_Strecke(hObject);
-
-
 
 guidata(hObject,handles);
 end
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu_AuswahlStrecke_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_AuswahlStrecke (see GCBO)
+function popupmenuStrecke_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenuStrecke (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -191,9 +200,9 @@ end
 end
 
 
-% --- Executes on button press in pushbutton_Streckenparameter.
-function pushbutton_Streckenparameter_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_Streckenparameter (see GCBO)
+% --- Executes on button press in pushbuttonStreckenparameter.
+function pushbuttonStreckenparameter_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbuttonStreckenparameter (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -206,14 +215,14 @@ end
 
 
 
-% --- Executes on selection change in popupmenu_Verfahren.
-function popupmenu_Verfahren_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_Verfahren (see GCBO)
+% --- Executes on selection change in popupmenuVerfahren.
+function popupmenuVerfahren_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenuVerfahren (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_Verfahren contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_Verfahren
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenuVerfahren contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenuVerfahren
 
 % contents enthält Tabelle mit Inhalten des Popup-Menüs
 contents = get(hObject,'String');
@@ -226,9 +235,9 @@ switch selectedItemVerfahren
     % Wenn Ziegler-Nichols als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
-    case 'Ziegler-Nichols'
-        set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'}); % Reglerauswahl geben
-        set(handles.popupmenu_Regler, 'Value', 1); % default geben
+    case handles.textPopupmenuVerfahren(1) % Ziegler-Nichols 2.Var
+        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'}); % Reglerauswahl geben
+        set(handles.popupmenuRegler, 'Value', 1); % default geben
         
         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
         handles.subpanelPIRegler.Visible = 'off';
@@ -237,18 +246,18 @@ switch selectedItemVerfahren
     % Wenn CHR als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
-    case 'CHR periodischer Regelverlauf'
-        set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
-        set(handles.popupmenu_Regler, 'Value', 1);
+    case handles.textPopupmenuVerfahren(2) % CHR periodisch
+        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
+        set(handles.popupmenuRegler, 'Value', 1);
         
         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
         handles.subpanelPIRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'on';
 
         
-    case 'CHR aperiodischer Regelverlauf'
-        set(handles.popupmenu_Regler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
-        set(handles.popupmenu_Regler, 'Value', 1);
+    case handles.textPopupmenuVerfahren(3) % CHR aperiodisch
+        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
+        set(handles.popupmenuRegler, 'Value', 1);
         
         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
        handles.subpanelPIRegler.Visible = 'off';
@@ -257,16 +266,16 @@ switch selectedItemVerfahren
     % Wenn Kuhn normal oder schnell als Verfahren gewählt wurde, stehen als Regler
     % PI und PID zu Verfügung
     % Default-Einstellung ist PI-Regler
-    case 'Kuhn normal'
-        set(handles.popupmenu_Regler, 'String', {'PI-Regler','PID-Regler'});
-        set(handles.popupmenu_Regler, 'Value', 1);
+    case handles.textPopupmenuVerfahren(4)  % Kuhn normal
+        set(handles.popupmenuRegler, 'String', {'PI-Regler','PID-Regler'});
+        set(handles.popupmenuRegler, 'Value', 1);
         
         % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
         handles.subpanelPRegler.Visible = 'off';
         handles.subpanelPIRegler.Visible = 'on';
-    case 'Kuhn schnell'
-        set(handles.popupmenu_Regler, 'String', {'PI-Regler','PID-Regler'});
-        set(handles.popupmenu_Regler, 'Value', 1);
+    case handles.textPopupmenuVerfahren(5)  % Kuhn schnell
+        set(handles.popupmenuRegler, 'String', {'PI-Regler','PID-Regler'});
+        set(handles.popupmenuRegler, 'Value', 1);
         
         % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
         handles.subpanelPRegler.Visible = 'off';
@@ -274,14 +283,14 @@ switch selectedItemVerfahren
 end
         
         
-set(handles.popupmenu_Regler,'Enable','on'); 
+set(handles.popupmenuRegler,'Enable','on'); 
 
 guidata(hObject,handles);
 end
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu_Verfahren_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_Verfahren (see GCBO)
+function popupmenuVerfahren_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenuVerfahren (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -294,14 +303,14 @@ end
 end
 
 
-% --- Executes on selection change in popupmenu_Regler.
-function popupmenu_Regler_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_Regler (see GCBO)
+% --- Executes on selection change in popupmenuRegler.
+function popupmenuRegler_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenuRegler (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_Regler contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_Regler
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenuRegler contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenuRegler
 
 contents = cellstr(get(hObject,'String'));
 selectedController = contents{get(hObject,'Value')};
@@ -330,8 +339,8 @@ end
 end
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu_Regler_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_Regler (see GCBO)
+function popupmenuRegler_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenuRegler (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -411,6 +420,36 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 end
 
+% --- Executes on button press in radiobuttonPlotStepControlledSystem.
+function radiobuttonPlotStepControlledSystem_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobuttonPlotStepControlledSystem (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobuttonPlotStepControlledSystem
+
+% Grafik der Formel zur Sprungantwort Strecke anzeigen
+handles.subpanelSprungantwortClosedLoop.Visible = 'off';
+handles.subpanelSprungantwortStrecke.Visible = 'on';
+
+end
+
+% --- Executes on button press in radiobuttonPlotStepClosedLoop.
+function radiobuttonPlotStepClosedLoop_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobuttonPlotStepClosedLoop (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobuttonPlotStepClosedLoop
+
+% Grafik der Formel zur Sprungantwort des geschlossenen Regelkreises anzeigen
+handles.subpanelSprungantwortStrecke.Visible = 'off';
+handles.subpanelSprungantwortClosedLoop.Visible = 'on';
+
+end
+
+
+
 % --- Executes on button press in startbutton.
 function startbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to startbutton (see GCBO)
@@ -424,16 +463,16 @@ totzeitTt = handles.totzeitTt;
 %% Eingaben auslesen
 
 % Eingegebener Streckentyp auslesen
-contentPopupmenuAuswahlStrecke = get(handles.popupmenu_AuswahlStrecke,'String');
-selectedItemStrecke = contentPopupmenuAuswahlStrecke{get(handles.popupmenu_AuswahlStrecke,'Value')}
+contentPopupmenuAuswahlStrecke = get(handles.popupmenuStrecke,'String');
+selectedItemStrecke = contentPopupmenuAuswahlStrecke{get(handles.popupmenuStrecke,'Value')}
 
 % Eingegebenes Verfahren auslesen
-contentPopupmenuVerfahren = get(handles.popupmenu_Verfahren,'String');
-selectedItemVerfahren = contentPopupmenuVerfahren{get(handles.popupmenu_Verfahren,'Value')};
+contentPopupmenuVerfahren = get(handles.popupmenuVerfahren,'String');
+selectedItemVerfahren = contentPopupmenuVerfahren{get(handles.popupmenuVerfahren,'Value')};
 
 % Eingegebener Regler auslesen
-contentPopupmenuRegler = get(handles.popupmenu_Regler,'String');
-selectedItemController = contentPopupmenuRegler{get(handles.popupmenu_Regler,'Value')};
+contentPopupmenuRegler = get(handles.popupmenuRegler,'String');
+selectedItemController = contentPopupmenuRegler{get(handles.popupmenuRegler,'Value')};
 
 % Eingebene Simulationszeiten auslesen
 simulationStartTime = str2double(get(handles.editSimulationStartTime,'String'));
@@ -448,26 +487,30 @@ if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
     % Bestimmung der Regelparameter KR,Tn,Tv nach dem ausgewählten Verfahren
     % ausgewählter Regler wird als Parameter 'selectedItemController' übergeben
     switch selectedItemVerfahren
-        case 'Ziegler-Nichols'
+        case handles.textPopupmenuVerfahren(1) % Ziegler-Nichols 2. Variante
             % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
             % zurückgegeben
             [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
             [Kr,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
-        case 'CHR periodischer Regelverlauf'
+        case handles.textPopupmenuVerfahren(2) % CHR periodisch
             % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
             % zurückgegeben
             [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
             [Kr,Tn,Tv] = CHR_periodisch(konstanteK,Ta,Tu,selectedItemController);
-       case 'CHR aperiodischer Regelverlauf'
+       case handles.textPopupmenuVerfahren(3)   % CHR aperiodisch
             % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
             % zurückgegeben
             [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
             [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
 
-        case 'Kuhn normal'
-            [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstantenT,selectedItemController);
-        case 'Kuhn schnell'
-            [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstantenT,selectedItemController);
+        case handles.textPopupmenuVerfahren(4)  % Kuhn normal
+            [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
+            
+        case handles.textPopupmenuVerfahren(5)  % Kuhn schnell
+            [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
+            
+        case handles.textPopupmenuVerfahren(6)  % Skogestad
+            [Kr,Tn,Tv] = Skogestad(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke);
     end
 
 
@@ -537,33 +580,4 @@ legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende d
 
 
 guidata(hObject,handles)
-end
-
-
-% --- Executes on button press in radiobuttonPlotStepControlledSystem.
-function radiobuttonPlotStepControlledSystem_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobuttonPlotStepControlledSystem (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobuttonPlotStepControlledSystem
-
-% Grafik der Formel zur Sprungantwort Strecke anzeigen
-handles.subpanelSprungantwortClosedLoop.Visible = 'off';
-handles.subpanelSprungantwortStrecke.Visible = 'on';
-
-end
-
-% --- Executes on button press in radiobuttonPlotStepClosedLoop.
-function radiobuttonPlotStepClosedLoop_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobuttonPlotStepClosedLoop (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobuttonPlotStepClosedLoop
-
-% Grafik der Formel zur Sprungantwort des geschlossenen Regelkreises anzeigen
-handles.subpanelSprungantwortStrecke.Visible = 'off';
-handles.subpanelSprungantwortClosedLoop.Visible = 'on';
-
 end

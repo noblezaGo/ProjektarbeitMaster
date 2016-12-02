@@ -1,5 +1,3 @@
-% TO DO: WT wird ohne Totzeit bestimmt! Falsch!
-
 % Bestimmung Wendetangente numerisch
 function [Tu,Ta] =  Bestimmung_Wendetangente_numerisch(K,zeitkonstantenT,totzeitTt,simulationTime)
 

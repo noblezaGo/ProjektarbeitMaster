@@ -1,6 +1,6 @@
 % T-Summenregel nach Kuhn schnell
 
-function[Kr,Tn,Tv] = Kuhn_schnell(Ks,zeitkonstantenT,selectedController)
+function[Kr,Tn,Tv] = Kuhn_schnell(Ks,zeitkonstantenT,totzeitTt,selectedController)
 
 % TO DO: UNterscheidung der Strecken
 zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
@@ -9,7 +9,7 @@ T1 = zeitkonstantenT(1);
 T2 = zeitkonstantenT(2);
 T3 = zeitkonstantenT(3);
 % Summenzeitkonstante bilden
-TSum = T1+T2+T3;
+TSum = T1+T2+T3+totzeitTt;
 
 % % selectedController enthält den über das Popup-Menü ausgewählten Regler
 switch selectedController

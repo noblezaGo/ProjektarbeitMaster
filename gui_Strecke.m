@@ -1,6 +1,6 @@
 % Diese GUI figure wird benutzt zur Einlesung der Streckenparameter
 
-% hObjectMain ist handle von popupmenu_AuswahlStrecke oder pushbutton_Streckenparameter, von dort
+% hObjectMain ist handle von popupmenuStrecke oder pushbutton_Streckenparameter, von dort
 % wird gui_Strecke gecallt
 % parent von hObjectMain ist figure von gui_Projektarbeit
 
@@ -12,9 +12,9 @@ handles.fig = figure('WindowStyle','modal','position',[0 700 500 600],'MenuBar',
 handles.hObjectMain = hObjectMain;
 handlesMain = guidata(hObjectMain);
 
-contentPopupmenu_AuswahlStrecke = get(handlesMain.popupmenu_AuswahlStrecke,'String');
+contentPopupmenuStrecke = get(handlesMain.popupmenuStrecke,'String');
 % Ausgewählten Streckentyp auslesen
-selectedControlledSystem = contentPopupmenu_AuswahlStrecke{get(handlesMain.popupmenu_AuswahlStrecke,'Value')};
+selectedControlledSystem = contentPopupmenuStrecke{get(handlesMain.popupmenuStrecke,'Value')};
 
 
 % TO Do: Andere Lösung finden als Bilder von Pfad einlesen -> funktioniert

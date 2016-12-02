@@ -1,6 +1,7 @@
 % T-Summenregel nach Kuhn normal
-function[Kr,Tn,Tv] = Kuhn_normal(Ks,zeitkonstantenT,selectedController)
-% TO DO
+function[Kr,Tn,Tv] = Kuhn_normal(Ks,zeitkonstantenT,totzeitTt,selectedController)
+% TO DO Totzeit
+%% FALSCH da Totzeit abgezogen werden muss
 
 zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
 
@@ -9,7 +10,7 @@ T2 = zeitkonstantenT(2);
 T3 = zeitkonstantenT(3);
 
 % Summenzeitkonstante bilden
-TSum = T1+T2+T3;
+TSum = T1+T2+T3*totzeitTt;
 
 % % selectedController enthält den über das Popup-Menü ausgewählten Regler
 switch selectedController

@@ -1,0 +1,93 @@
+% Skogestad Verfahren
+function[Kr,Tn,Tv]= Skogestad(Ks,zeitkonstantenT,totzeitTt,streckentyp)
+
+% Tc von Skogestad wird gleich der Totzeit angenommen
+Tc = totzeitTt;
+
+% Reglereinstellungen werden in Abhängigkeit des Streckentyps vorgenommen
+%% Bestimmung des Streckentyps
+
+% NaN ersetzen durch 0
+% Wenn die Strecke z.B. nur eine Zeitkonstante enthält, ist zeitkonstantenT(2) und zeitkonstantenT(3) = NaN 
+zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
+T = [];
+
+% Anzahl Streckenzeitkonstanten bestimmen
+% Abfrage wieviele Zahlen im Array "zeitkonstantenT" ungleich 0 sind
+for i=1:numel(zeitkonstantenT)
+    if(zeitkonstantenT(i)~=0)
+        T(i) = zeitkonstantenT(i);
+    end
+end
+
+% Anzahl Streckenkonstanten
+anzT = numel(T);
+
+switch streckentyp
+    case 'PTn-Strecke'
+        if(totzeitTt~=0 && anzT==1)
+            strecke = 'PT1MitTotzeit';           
+        
+        elseif(totzeitTt~=0 && anzT==2)
+            strecke = 'PT2MitTotzeit';
+        end
+        
+    
+
+    case 'ITn-Strecke'
+        if(totzeitTt~=0 && anzT==0)
+            strecke = 'IMitTotzeit';        
+        
+        elseif(totzeitTt~=0 && anzT==1)
+            strecke = 'IT1MitTotzeit';
+        end
+end
+
+% Abfrage ob "Strecke" existert. Wenn nicht muss Fehler geworfen werden
+if(exist('strecke','var')==0)
+    % Throw Error
+end
+
+% Zeitkonstanten der Strecke in absteigender Größe nach sortieren
+Tsort = sort(T,'descend');
+
+% Reglerparameter nach Skogestad für seriellen PID bzw. PI-Regler
+switch strecke
+    case 'PT1MitTotzeit'
+        % PI-Regler
+        KcController = Tsort(1)/(Ks*(Tc+totzeitTt));
+        T1Controller = min(Tsort(1),4*(Tc+totzeitTt));
+        T2Controller = 0;
+        
+    case 'PT2MitTotzeit'
+        % PID-Regler
+        KcController = Tsort(1)/(Ks*(Tc+totzeitTt));
+        T1Controller = min(Tsort(1),4*(Tc+totzeitTt));
+        T2Controller = Tsort(2);
+        
+    case 'IMitTotzeit'
+        % PI-Regler
+        KcController = 1/(Ks*(Tc+totzeitTt));
+        T1Controller = 4*(Tc+totzeitTt);
+        T2Controller = 0;
+        
+    case 'IT1MitTotzeit'
+        % PID-Regler
+        KcController = 1/(Ks*(Tc+totzeitTt));
+        T1Controller = 4*(Tc+totzeitTt);
+        T2Controller = Tsort(1);
+        
+end
+        
+   
+            
+
+
+
+
+% Umrechnung von Regler in serieller Form zu Regler in additiver Form
+Kr = KcController*(1+T2Controller/T1Controller);
+Tn = T1Controller+T2Controller;
+Tv = T1Controller*T2Controller/(T1Controller+T2Controller);
+
+end
