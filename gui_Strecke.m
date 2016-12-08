@@ -14,12 +14,11 @@ handlesMain = guidata(hObjectMain);
 
 contentPopupmenuStrecke = get(handlesMain.popupmenuStrecke,'String');
 % Ausgewählten Streckentyp auslesen
-selectedControlledSystem = contentPopupmenuStrecke{get(handlesMain.popupmenuStrecke,'Value')};
+handles.selectedControlledSystem = contentPopupmenuStrecke{get(handlesMain.popupmenuStrecke,'Value')};
 
 
-% TO Do: Andere Lösung finden als Bilder von Pfad einlesen -> funktioniert
-% auf anderem System nicht
-switch selectedControlledSystem
+
+switch handles.selectedControlledSystem
     case 'PTn-Strecke'
         grafikUebertragungsfunktionStrecke=imread('UebertragungsfunktionPTnStrecke','png'); 
         %grafikUebertragungsfunktionStrecke=imread('C:\Users\David\Studium\Master\Projektarbeit\UebertragungsfunktionPTnStrecke','png');   % Einlesen der Grafik
@@ -118,21 +117,27 @@ switch anzahlT
         
         handles.textT1.Visible = 'off';
         handles.editT1.Visible = 'off';
+        handles.editT1.String = {''};
         
         handles.textT2.Visible = 'off';
         handles.editT2.Visible = 'off';
+        handles.editT2.String = {''};
         
         handles.textT3.Visible = 'off';
         handles.editT3.Visible = 'off';
+        handles.editT3.String = {''};
+        
     case '1'
         % T2 und T3 ausblenden
         % -> sind default ausgeblendet, aber wenn erst '2' ausgewählt wurde im
         % Popupmenü und dann '1' muss wieder ausgeblendet werden
         handles.textT2.Visible = 'off';
         handles.editT2.Visible = 'off';
+        handles.editT2.String = {''};
         
         handles.textT3.Visible = 'off';
         handles.editT3.Visible = 'off';
+        handles.editT3.String = {''};
         
         handles.textT1.Visible = 'on';
         handles.editT1.Visible = 'on';
@@ -141,6 +146,7 @@ switch anzahlT
         % T3 ausblenden, T2 einblenden
         handles.textT3.Visible = 'off';
         handles.editT3.Visible = 'off';
+        handles.editT3.String = {''};
         
         handles.textT1.Visible = 'on';
         handles.editT1.Visible = 'on';
@@ -165,7 +171,7 @@ end
 guidata(hObject,handles);
 end
 
-% Callback Pushbutton
+% Callback Pushbutton "Übernehmen"
 function pushbutton_Apply_Callback(hObject,eventdata)
 
 % Handles der figure gui_Strecke
@@ -183,8 +189,73 @@ T1 = str2double(get(handles.editT1,'String'));
 T2 = str2double(get(handles.editT2,'String'));
 T3 = str2double(get(handles.editT3,'String'));
 
+zeitkonstantenTRaw = [T1 T2 T3];
+
 % Array aus den Zeitkonstanten 
-handlesMain.zeitkonstantenT = [T1 T2 T3];
+handlesMain.zeitkonstantenT = [];
+for i=1:numel(zeitkonstantenTRaw)
+    % Wenn Element ein numerisches Element und ungleich null ist, wird es
+    % dem Array handlesMain.zeitkonstantenT hinzugefügt
+   if(isnan(zeitkonstantenTRaw(i))==0 && zeitkonstantenTRaw(i)~=0)
+       handlesMain.zeitkonstantenT(end+1) = zeitkonstantenTRaw(i);
+   end
+end
+
+% handlesMain.zeitkonstantenT enthält die eingegebenen Zeitkonstanten
+
+
+
+%% Entscheidung, welcher Regler für die gewählte Strecke in Frage kommt
+
+% Anzahl Zeitkonstanten der Strecke
+anzT = numel(handlesMain.zeitkonstantenT);
+
+% TO DO: ENtscheidung ob mit der ohne Totzeit : ohne Totzeit kein CHR
+% Ziegler usw
+
+switch handles.selectedControlledSystem
+    case handlesMain.textPopupmenuStrecke(1)    % PTn-Strecke
+         if(anzT==2)    % Strecke hat 2 Zeitkonstanten
+            handlesMain.popupmenuVerfahren.Value = 1; % bevor string property neu gesetzt wird immer value property auf 1 zurücksetzen, sonst kommt warning und popupmenü wird ausgeblendet
+            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad'};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
+         end
+         if(anzT==3)    % Strecke hat 3 Zeitkonstanten
+            handlesMain.popupmenuVerfahren.Value = 1; % bevor string property neu gesetzt wird immer value property auf 1 zurücksetzen, sonst kommt warning und popupmenü wird ausgeblendet
+            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell'};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
+         end
+         if(anzT==1)    % Strecke hat 1 Zeitkonstante
+             handlesMain.popupmenuVerfahren.Value = 1;
+            handlesMain.popupmenuVerfahren.String = {'','Skogestad'};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
+         end
+         if(anzT==0) % Strecke ohne Zeitkonstante
+             handlesMain.popupmenuVerfahren.Value = 1;
+             handlesMain.popupmenuVerfahren.String = {''};
+             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'off';
+         end
+         
+         
+    case handlesMain.textPopupmenuStrecke(2)    % ITn-Strecke
+         if(anzT<=1) % Strecke hat 0 oder 1 Zeitkonstanten
+             handlesMain.popupmenuVerfahren.Value = 1;
+            handlesMain.popupmenuVerfahren.String = {'','Skogestad'};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
+         else % Strecke hat 2 oder 3 Zeitkonstanten
+             handlesMain.popupmenuVerfahren.Value = 1;
+            handlesMain.popupmenuVerfahren.String = {''};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'off';
+         
+         end
+        
+    case handlesMain.textPopupmenuStrecke(3)    % DTn-Strecke
+        handlesMain.popupmenuVerfahren.Value = 1;
+         handlesMain.popupmenuVerfahren.String = {''};
+         handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'off';
+end
+
+handlesMain.popupmenuVerfahren.Enable = 'on';
 
 % figure ausblenden
 handles.fig.Visible = 'off';

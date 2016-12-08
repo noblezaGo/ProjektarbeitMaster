@@ -6,21 +6,37 @@ function [Tu,Ta] =  Bestimmung_Wendetangente_numerisch(K,zeitkonstantenT,totzeit
 %s = tf('s');
 
 % NaN ersetzen durch 0
-% Wenn die Strecke z.B. nur eine Zeitkonstante enthält, ist zeitkonstantenT(2) und zeitkonstantenT(3) = NaN 
-zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
-
-T1 = zeitkonstantenT(1);
-T2 = zeitkonstantenT(2);
-T3 = zeitkonstantenT(3);
+% % Wenn die Strecke z.B. nur eine Zeitkonstante enthält, ist zeitkonstantenT(2) und zeitkonstantenT(3) = NaN 
+% zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
+% 
+% T1 = zeitkonstantenT(1);
+% T2 = zeitkonstantenT(2);
+% T3 = zeitkonstantenT(3);
 
 % allg. Formel der Übertragungsfkt PTn
 % PT1-Strecke: T2==0, T3==0
 % PT2-Strecke: T3==0
 %Gs = K/((1+T1*s)*(1+T2*s)*(1+T3*s)) * exp(-s*totzeitTt);
+anzT = numel(zeitkonstantenT);
 
-% H wird definiert als anonyme Funktion
-H = @(s) K/((1+T1*s)*(1+T2*s)*(1+T3*s) * s) * exp(-s*totzeitTt);
-%K/((T1*s+1) * (T2*s+1)*s);
+switch anzT
+    case 2
+        H = @(s) K/((zeitkonstantenT(1)*s+1)*(zeitkonstantenT(2)*s+1) * s) * exp(-s*totzeitTt);
+        
+    case 3
+        H = @(s) K/((zeitkonstantenT(1)*s+1)*(zeitkonstantenT(2)*s+1)*(zeitkonstantenT(3)*s+1) * s) * exp(-s*totzeitTt);
+        
+    otherwise
+        % Throw Error
+end
+
+% for i=1:numel(zeitkonstantenT)
+%    TProd = TProd * (1+zeitkonstantenT(i)*s); % Produkt aus (1+Ti*s)
+% end 
+% 
+% % H wird definiert als anonyme Funktion
+% H = @(s) K/(TProd * s) * exp(-s*totzeitTt);
+% %K/((T1*s+1) * (T2*s+1)*s);
 
 %% Sprungantwort in Zeitbereich wandeln
 

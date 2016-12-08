@@ -54,19 +54,24 @@ function gui_Projektarbeit_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   unrecognized PropertyName/PropertyValue pairs from the
 %            command line (see VARARGIN)
 
-handles.popupmenuRegler.Enable = 'off';
+%% Defaulteinstellungen Bedienmöglichkeiten. Buttons/Popupmenüs die am Anfang nicht bedient werden sollen werden ausgegraut.
+handles.popupmenuVerfahren.Enable = 'off';  % Ausgrauen des Popupmenüs Verfahren
+handles.popupmenuRegler.Enable = 'off'; % Ausgrauen des Popupmenüs Regler
+handles.radiobuttonPlotStepClosedLoop.Enable = 'off';   % Ausgrauen des Radiobuttons zum Plotten des geschlossenen Regelkreises
 
 %% Text Popupmenü Strecke
-handles.textPopupmenuStrecke = {'PTn-Strecke','ITn-Strecke','DTn-Strecke'}
-handles.popupmenuStrecke.String = handles.textPopupmenuStrecke;
+handles.textPopupmenuStrecke = {'PTn-Strecke','ITn-Strecke','DTn-Strecke'};
+handles.popupmenuStrecke.String = [{''},handles.textPopupmenuStrecke];
 
 %% Text Popupmenü Verfahren
 handles.textPopupmenuVerfahren = {'Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad'};
-handles.popupmenuVerfahren.String = handles.textPopupmenuVerfahren;
+handles.popupmenuVerfahren.String = {''};
+
 
 %% Text Popupmenü Regler
 handles.textPopupmenuRegler = {'P-Regler','PI-Regler','PD-Regler','PID-Regler'}
-handles.popupmenuRegler.String = handles.textPopupmenuRegler;
+handles.popupmenuRegler.String = {''};
+
 
 %% Anzeige Grafik P-Regler
 handles.grafikUebertragungsfunktionPRegler=imread('UebertragungsfunktionPRegler','png');   % Einlesen der Grafik 
@@ -76,7 +81,7 @@ handles.grafikUebertragungsfunktionPRegler=imread('UebertragungsfunktionPRegler'
 [heightImgPRegler,widthImgPRegler,dimImgPRegler] = size(handles.grafikUebertragungsfunktionPRegler);
 
 % Subpanel mit der Größe des Bildes des P-Reglers erstellen
-handles.subpanelPRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[220,35,widthImgPRegler,heightImgPRegler]);
+handles.subpanelPRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[220,37,widthImgPRegler,heightImgPRegler]);
 % Axes wird in Subpanel erstellt
 handles.axesPRegler = axes(handles.subpanelPRegler,'Units','normalized','Position',[0,0,1,1]);
 % Bild wird in Axes angezeigt
@@ -96,6 +101,21 @@ handles.subpanelPIRegler = uipanel(handles.panelRegler,'BackgroundColor','white'
 handles.axesPIRegler = axes(handles.subpanelPIRegler,'Units','normalized','Position',[0,0,1,1]);
 % Bild wird in Axes angezeigt
 image(handles.axesPIRegler,handles.grafikUebertragungsfunktionPIRegler);
+axis off
+
+%% Anzeige Grafik PD-Regler
+handles.grafikUebertragungsfunktionPDRegler = imread('UebertragungsfunktionPDRegler','png');   % Einlesen der Grafik
+ % Bildgröße bestimmen
+ % heightImgPDRegler: Höhe der Grafik
+ % widthImgPDRegler: Breite der Grafik
+[heightImgPDRegler,widthImgPDRegler,dimImgPDRegler] = size(handles.grafikUebertragungsfunktionPDRegler);
+
+% Subpanel mit der Größe des Bildes des PD-Reglers erstellen
+handles.subpanelPDRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[150,35,widthImgPDRegler,heightImgPDRegler],'Visible','off');
+% Axes wird in Subpanel erstellt
+handles.axesPDRegler = axes(handles.subpanelPDRegler,'Units','normalized','Position',[0,0,1,1]);
+% Bild wird in Axes angezeigt
+image(handles.axesPDRegler,handles.grafikUebertragungsfunktionPDRegler);
 axis off
 
 
@@ -183,6 +203,8 @@ function popupmenuStrecke_Callback(hObject, eventdata, handles)
 
 gui_Strecke(hObject);
 
+
+        
 guidata(hObject,handles);
 end
 
@@ -231,55 +253,118 @@ contents = get(hObject,'String');
 % selectedItemVerfahren enthält ausgewähltes Berechnungsverfahren
 selectedItemVerfahren = contents{get(hObject,'Value')};
 
+%% Je nach ausgewähltem Verfahren wird entschieden, welche Regler angewählt werden können
+% textPopupmenuVerfahren ist ein cell array, das strings von allen
+% implementierten Verfahren enthält und in der openingFcn definiert wird
 switch selectedItemVerfahren
     % Wenn Ziegler-Nichols als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
+    
+    % IMMER value auf 1 zuerst zurücksetzen bevor die string property neu
+    % gesetzt wird
     case handles.textPopupmenuVerfahren(1) % Ziegler-Nichols 2.Var
-        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'}); % Reglerauswahl geben
         set(handles.popupmenuRegler, 'Value', 1); % default geben
+        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'}); % Reglerauswahl geben        
         
         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
-        handles.subpanelPIRegler.Visible = 'off';
+         handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIDRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'on';
         
     % Wenn CHR als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
     case handles.textPopupmenuVerfahren(2) % CHR periodisch
-        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
         set(handles.popupmenuRegler, 'Value', 1);
+        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});        
         
         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
         handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIDRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'on';
 
         
     case handles.textPopupmenuVerfahren(3) % CHR aperiodisch
-        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});
         set(handles.popupmenuRegler, 'Value', 1);
+        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});        
         
         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
-       handles.subpanelPIRegler.Visible = 'off';
-       handles.subpanelPRegler.Visible = 'on';
+        handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'on';
         
-    % Wenn Kuhn normal oder schnell als Verfahren gewählt wurde, stehen als Regler
-    % PI und PID zu Verfügung
-    % Default-Einstellung ist PI-Regler
+    
     case handles.textPopupmenuVerfahren(4)  % Kuhn normal
-        set(handles.popupmenuRegler, 'String', {'PI-Regler','PID-Regler'});
         set(handles.popupmenuRegler, 'Value', 1);
+        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PD-Regler','PID-Regler'});        
         
+        % Grafik der Übertragungsfunktion des P-Reglers anzeigen
+         handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'on';    
+      
         % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
-        handles.subpanelPRegler.Visible = 'off';
-        handles.subpanelPIRegler.Visible = 'on';
     case handles.textPopupmenuVerfahren(5)  % Kuhn schnell
-        set(handles.popupmenuRegler, 'String', {'PI-Regler','PID-Regler'});
         set(handles.popupmenuRegler, 'Value', 1);
+        set(handles.popupmenuRegler, 'String', {'PI-Regler','PID-Regler'});        
         
         % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIDRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'off';
         handles.subpanelPIRegler.Visible = 'on';
+        
+    case handles.textPopupmenuVerfahren(6); % Skogestad
+        
+        % alle Grafiken ausblenden
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'off';
+        handles.subpanelPIRegler.Visible = 'off';
+        
+        % Je nach gewählter Strecke und Anzahl Zeitkonstanten steht entweder PI-oder
+        % PID-Regler zur Verfügung
+        contentPopupmenuStrecke = get(handles.popupmenuStrecke,'String');
+        selectedControlledSystem = contentPopupmenuStrecke{get(handles.popupmenuStrecke,'Value')};
+        
+        anzT = numel(handles.zeitkonstantenT);  % Anzahl Zeitkonstanten der Strecke
+        
+        set(handles.popupmenuRegler, 'Value', 1); 
+           
+        switch selectedControlledSystem
+            case handles.textPopupmenuStrecke(1)    % PTn-Strecke  
+                
+                if(anzT==1)
+                   handles.popupmenuRegler.String = {'PI-Regler'};    % bei PT1-Strecke wird nach dem Skogestad-Verfahren ein PI-Regler verwendet
+                   
+                   % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
+                   handles.subpanelPIRegler.Visible = 'on';
+                   
+                elseif(anzT==2)
+                    handles.popupmenuRegler.String = {'PID-Regler'};    % bei PT2-Strecke wird nach dem Skogestad-Verfahren ein PID-Regler verwendet
+                    % Grafik der Übertragungsfunktion des PID-Reglers anzeigen
+                    handles.subpanelPIDRegler.Visible = 'on';
+                end
+                
+            case handles.textPopupmenuStrecke(2)    % ITn-Strecke
+                
+                if(anzT==0)
+                   handles.popupmenuRegler.String = {'PI-Regler'};    % bei I-Strecke wird nach dem Skogestad-Verfahren ein PI-Regler verwendet
+                   
+                   % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
+                   handles.subpanelPIRegler.Visible = 'on';
+                elseif(anzT==1)
+                    handles.popupmenuRegler.String = {'PID-Regler'};    % bei IT1-Strecke wird nach dem Skogestad-Verfahren ein PID-Regler verwendet
+                    % Grafik der Übertragungsfunktion des PID-Reglers anzeigen
+                    handles.subpanelPIDRegler.Visible = 'on';
+                end
+        end
+            
 end
         
         
@@ -320,20 +405,32 @@ switch selectedController
     case 'P-Regler' 
      % Grafik der Übertragungsfunktion des P-Reglers anzeigen
     handles.subpanelPIRegler.Visible = 'off';
+    handles.subpanelPDRegler.Visible = 'off';
     handles.subpanelPIDRegler.Visible = 'off';
     handles.subpanelPRegler.Visible = 'on';
     
     % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
     case 'PI-Regler'
     handles.subpanelPIDRegler.Visible = 'off';
+    handles.subpanelPDRegler.Visible = 'off';
     handles.subpanelPRegler.Visible = 'off';
     handles.subpanelPIRegler.Visible = 'on';
+    
+    % Grafik der Übertragungsfunktion des PD-Reglers anzeigen
+    case 'PD-Regler'
+    handles.subpanelPIDRegler.Visible = 'off';
+    handles.subpanelPRegler.Visible = 'off';
+    handles.subpanelPIRegler.Visible = 'off';
+    handles.subpanelPDRegler.Visible = 'on';
    
     % Grafik der Übertragungsfunktion des PID-Reglers anzeigen
     case 'PID-Regler'       
     handles.subpanelPRegler.Visible = 'off';
+    handles.subpanelPDRegler.Visible = 'off';
     handles.subpanelPIRegler.Visible = 'off'; 
     handles.subpanelPIDRegler.Visible = 'on';
+    
+   
 end        
 
 end

@@ -9,19 +9,20 @@ Tc = totzeitTt;
 
 % NaN ersetzen durch 0
 % Wenn die Strecke z.B. nur eine Zeitkonstante enthält, ist zeitkonstantenT(2) und zeitkonstantenT(3) = NaN 
-zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
-T = [];
-
-% Anzahl Streckenzeitkonstanten bestimmen
-% Abfrage wieviele Zahlen im Array "zeitkonstantenT" ungleich 0 sind
-for i=1:numel(zeitkonstantenT)
-    if(zeitkonstantenT(i)~=0)
-        T(i) = zeitkonstantenT(i);
-    end
-end
+% zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
+% T = [];
+% 
+% % Anzahl Streckenzeitkonstanten bestimmen
+% % Abfrage wieviele Zahlen im Array "zeitkonstantenT" ungleich 0 sind
+% for i=1:numel(zeitkonstantenT)
+%     if(zeitkonstantenT(i)~=0)
+%         T(i) = zeitkonstantenT(i);
+%     end
+% end
 
 % Anzahl Streckenkonstanten
-anzT = numel(T);
+% anzT = numel(T);
+anzT = numel(zeitkonstantenT);
 
 switch streckentyp
     case 'PTn-Strecke'
@@ -49,7 +50,7 @@ if(exist('strecke','var')==0)
 end
 
 % Zeitkonstanten der Strecke in absteigender Größe nach sortieren
-Tsort = sort(T,'descend');
+Tsort = sort(zeitkonstantenT,'descend');
 
 % Reglerparameter nach Skogestad für seriellen PID bzw. PI-Regler
 switch strecke
