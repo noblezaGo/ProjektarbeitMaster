@@ -58,6 +58,7 @@ function gui_Projektarbeit_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.popupmenuVerfahren.Enable = 'off';  % Ausgrauen des Popupmenüs Verfahren
 handles.popupmenuRegler.Enable = 'off'; % Ausgrauen des Popupmenüs Regler
 handles.radiobuttonPlotStepClosedLoop.Enable = 'off';   % Ausgrauen des Radiobuttons zum Plotten des geschlossenen Regelkreises
+handles.pushbuttonStreckenparameter.Enable = 'off'; % Ausgrauen des Buttons Streckenparameter
 
 %% Text Popupmenü Strecke
 handles.textPopupmenuStrecke = {'PTn-Strecke','ITn-Strecke','DTn-Strecke'};
@@ -201,10 +202,13 @@ function popupmenuStrecke_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenuStrecke contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenuStrecke
 
+
+% TO DO: gui_Strecke soll nicht aufgehen, wenn leeres Feld im Popupmenü
+% aufgeht
 gui_Strecke(hObject);
 
+handles.pushbuttonStreckenparameter.Enable = 'on';
 
-        
 guidata(hObject,handles);
 end
 
@@ -553,15 +557,39 @@ function startbutton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-konstanteK = handles.konstanteK;
-zeitkonstantenT = handles.zeitkonstantenT;
-totzeitTt = handles.totzeitTt;
+%% Zuweisung der Streckenparameter der gui_Strecke
+if(isfield(handles,'konstanteK'))
+    konstanteK = handles.konstanteK;
+else
+    errordlg('Bitte Streckenparameter eingeben');
+    return
+end
+
+if(isfield(handles,'zeitkonstantenT'))
+    zeitkonstantenT = handles.zeitkonstantenT;
+else
+    errordlg('Bitte Streckenparameter eingeben');
+    return
+end
+
+if(isfield(handles,'totzeitTt'))
+    totzeitTt = handles.totzeitTt;
+else
+    errordlg('Bitte Streckenparameter eingeben');
+    return
+end
+
 
 %% Eingaben auslesen
 
 % Eingegebener Streckentyp auslesen
 contentPopupmenuAuswahlStrecke = get(handles.popupmenuStrecke,'String');
 selectedItemStrecke = contentPopupmenuAuswahlStrecke{get(handles.popupmenuStrecke,'Value')}
+if(isempty(selectedItemStrecke))
+    errordlg('Bitte Regelstrecke auswählen');
+    return
+end
+
 
 % Eingegebenes Verfahren auslesen
 contentPopupmenuVerfahren = get(handles.popupmenuVerfahren,'String');
@@ -581,35 +609,41 @@ stateRadiobuttonPlotClosedLoop = get(handles.radiobuttonPlotStepClosedLoop,'Valu
 %% Abfrage, ob die Sprungantwort der Strecke oder des geschlossenen geregelten Kreises geplottet werden soll
 if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
     %% Bestimmung der Reglerparameter Kr,Tn,Tv
+    % geschlossener Regelkreis wurde ausgewählt
     % Bestimmung der Regelparameter KR,Tn,Tv nach dem ausgewählten Verfahren
     % ausgewählter Regler wird als Parameter 'selectedItemController' übergeben
-    switch selectedItemVerfahren
-        case handles.textPopupmenuVerfahren(1) % Ziegler-Nichols 2. Variante
-            % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
-            % zurückgegeben
-            [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
-            [Kr,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
-        case handles.textPopupmenuVerfahren(2) % CHR periodisch
-            % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
-            % zurückgegeben
-            [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
-            [Kr,Tn,Tv] = CHR_periodisch(konstanteK,Ta,Tu,selectedItemController);
-       case handles.textPopupmenuVerfahren(3)   % CHR aperiodisch
-            % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
-            % zurückgegeben
-            [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
-            [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
+    
+    if(isempty(selectedItemVerfahren)) % Prüfen ob Entwurfsverfahren ausgewählt wurde
+        errordlg('Bitte Entwurfsverfahren auswählen');
+        return
+    else
+        switch selectedItemVerfahren
+            case handles.textPopupmenuVerfahren(1) % Ziegler-Nichols 2. Variante
+                % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+                % zurückgegeben
+                [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
+                [Kr,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
+            case handles.textPopupmenuVerfahren(2) % CHR periodisch
+                % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+                % zurückgegeben
+                [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
+                [Kr,Tn,Tv] = CHR_periodisch(konstanteK,Ta,Tu,selectedItemController);
+           case handles.textPopupmenuVerfahren(3)   % CHR aperiodisch
+                % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+                % zurückgegeben
+                [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
+                [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
 
-        case handles.textPopupmenuVerfahren(4)  % Kuhn normal
-            [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
-            
-        case handles.textPopupmenuVerfahren(5)  % Kuhn schnell
-            [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
-            
-        case handles.textPopupmenuVerfahren(6)  % Skogestad
-            [Kr,Tn,Tv] = Skogestad(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke);
+            case handles.textPopupmenuVerfahren(4)  % Kuhn normal
+                [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
+
+            case handles.textPopupmenuVerfahren(5)  % Kuhn schnell
+                [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
+
+            case handles.textPopupmenuVerfahren(6)  % Skogestad
+                [Kr,Tn,Tv] = Skogestad(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke);
+        end
     end
-
 
     % Ausgabe der berechneten Reglerparameter P,I,D
     set(handles.TextCalculatedP, 'String',['K = ' num2str(Kr)]);

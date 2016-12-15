@@ -38,7 +38,9 @@ switch selectedController
         Tn = 0.8 * TSum;
         Tv = 0.194 * TSum;
         
-    otherwise % throw error
+    otherwise 
+        % Errorhandling
+        errordlg('Error in Function "Kuhn_schnell". Content of parameter "selectedController" is not allowed.');  
 end
 
 end

@@ -43,6 +43,7 @@ switch selectedController
         Tv = 0.5*Tu;        
        
         
-    otherwise 
-        %Throw Error
+    otherwise
+        % Errorhandling
+        errordlg('Error in Function "ziegler_nichols". Content of parameter "selectedController" is not allowed.');  
 end

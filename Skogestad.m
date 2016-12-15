@@ -8,9 +8,9 @@
 % Ks: Verstärkung K der Strecke
 % zeitkonstantenT: Array, das die Streckenzeitkonstanten beinhaltet
 % totzeitTt: Totzeit der Strecke
-% streckentyp: String der den Streckentyp beinhaltet. Funktion hat 3 Streckentypen
+% streckentyp: String der den Streckentyp beinhaltet. Funktion hat 2 Streckentypen
 % implementiert. 
-% Streckentypen: 'PTn-Strecke','ITn-Strecke','DTn-Strecke'
+% Streckentypen: 'PTn-Strecke','ITn-Strecke'
 function[Kr,Tn,Tv]= Skogestad(Ks,zeitkonstantenT,totzeitTt,streckentyp)
 
 % Tc von Skogestad wird gleich der Totzeit angenommen
@@ -56,12 +56,14 @@ switch streckentyp
         end
         
     otherwise 
-        % THROW ERROR
+        % Errorhandling
+        errordlg('Error in Function "Skogestad". Content of parameter "streckentyp" cannot be handled by the function.');  
 end
 
 % Abfrage ob "Strecke" existert. Wenn nicht muss Fehler geworfen werden
 if(exist('strecke','var')==0)
-    % Throw Error
+    % Errorhandling
+        errordlg('Error in function "Skogestad". Parameters Kr,Tn,Tv cannot be calculated with Skogestad method for given input parameters. Skogestad method is not applicable for given controlled system.');  
 end
 
 % Zeitkonstanten der Strecke in absteigender Größe nach sortieren

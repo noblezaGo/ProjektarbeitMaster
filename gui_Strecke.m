@@ -108,16 +108,16 @@ function popupmenu_AnzT_Callback(hObject,eventdata)
 % definieren und dann hier handles = guidata(handles.fig);
 handles = guidata(hObject);
 content = get(hObject,'String');
-anzahlT = content{get(hObject,'Value')};
+handles.anzahlT = content{get(hObject,'Value')};
   
 
 %% Abhängig von eingestellter Anzahl an Zeitkonstanten im Popupmenü werden die Eingabefelder der Zeitkonstanten ein- oder ausgeblendet
-switch anzahlT
+switch handles.anzahlT
     case '0'
-        
+        % T1,T2 und T3 ausblenden
         handles.textT1.Visible = 'off';
         handles.editT1.Visible = 'off';
-        handles.editT1.String = {''};
+        handles.editT1.String = {''};   % Text in Eingabefeld wird gelöscht
         
         handles.textT2.Visible = 'off';
         handles.editT2.Visible = 'off';
@@ -181,31 +181,94 @@ handles = guidata(hObject);
 handlesMain = guidata(handles.hObjectMain);
 
 %% Einlesen der Werte für Konstante K,Totzeit Tt und der Zeitkonstanten
-handlesMain.konstanteK = str2double(get(handles.editK,'String'));
-handlesMain.totzeitTt = str2double(get(handles.editTt,'String'));
 
-
-T1 = str2double(get(handles.editT1,'String'));
-T2 = str2double(get(handles.editT2,'String'));
-T3 = str2double(get(handles.editT3,'String'));
-
-zeitkonstantenTRaw = [T1 T2 T3];
-
-% Array aus den Zeitkonstanten 
-handlesMain.zeitkonstantenT = [];
-for i=1:numel(zeitkonstantenTRaw)
-    % Wenn Element ein numerisches Element und ungleich null ist, wird es
-    % dem Array handlesMain.zeitkonstantenT hinzugefügt
-   if(isnan(zeitkonstantenTRaw(i))==0 && zeitkonstantenTRaw(i)~=0)
-       handlesMain.zeitkonstantenT(end+1) = zeitkonstantenTRaw(i);
-   end
+% Konstante K einlesen
+konstK = str2double(get(handles.editK,'String'));
+if(isnan(konstK)==0 && konstK>0)
+    handlesMain.konstanteK = konstK;
+else 
+    errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
+    return
 end
+
+% Totzeit Tt einlesen
+Tt = str2double(get(handles.editTt,'String'));
+if(isnan(Tt)==0 && Tt>0)
+    handlesMain.totzeitTt = Tt;
+else
+    errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
+    return
+end
+    
+
+% Zeitkonstanten einlesen
+handlesMain.zeitkonstantenT = [];
+% Im Popupmenü "Anzahl Zeitkonstanten" ist als default "0" eingestellt. Wenn
+% Benutzer nicht in Popupmenü reinklickt wird Callback nicht ausgeführt und
+% handles.anzahlT existiert nicht. Mit isfield prüfen ob anzahlT im handles
+% struct existiert
+if(isfield(handles,'anzahlT'))    
+    switch handles.anzahlT
+        case '1'
+            T1 = str2double(get(handles.editT1,'String'));
+            % T1 ist eine Zahl und größer als Null
+            if(isnan(T1)==0 && T1>0)
+                handlesMain.zeitkonstantenT(1) = T1;
+            else 
+                % Fehlerdialogbox wird bei unzulässigem Eingabewert angezeigt.
+                % Return unterbricht die Callback Funktion. Der Benutzer hat
+                % die Möglichkeit neu einzugeben.
+                errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Fließkommazahlen. Null ist unzulässig.');
+                return
+            end
+
+        case '2'
+            T1 = str2double(get(handles.editT1,'String'));
+            T2 = str2double(get(handles.editT2,'String'));
+            if(isnan(T1)==0 && T1>0 && isnan(T2)==0 && T2>0)
+                handlesMain.zeitkonstantenT(1) = T1;
+                handlesMain.zeitkonstantenT(2) = T2;
+            else
+                errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
+                return
+            end
+
+        case '3'
+            T1 = str2double(get(handles.editT1,'String'));
+            T2 = str2double(get(handles.editT2,'String'));
+            T3 = str2double(get(handles.editT3,'String'));
+            if(isnan(T1)==0 && T1>0 && isnan(T2)==0 && T2>0 && isnan(T3)==0 && T3>0)
+                handlesMain.zeitkonstantenT(1) = T1;
+                handlesMain.zeitkonstantenT(2) = T2;
+                handlesMain.zeitkonstantenT(3) = T3;
+            else
+                errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
+                return
+            end       
+
+    end
+
+end
+
+
+
+% zeitkonstantenTRaw = [T1 T2 T3];
+% 
+% % Array aus den Zeitkonstanten 
+% 
+% for i=1:numel(zeitkonstantenTRaw)
+%     % Wenn Element ein numerisches Element und ungleich null ist, wird es
+%     % dem Array handlesMain.zeitkonstantenT hinzugefügt
+%    if(isnan(zeitkonstantenTRaw(i))==0 && zeitkonstantenTRaw(i)~=0)
+%        handlesMain.zeitkonstantenT(end+1) = zeitkonstantenTRaw(i);
+%    end
+% end
 
 % handlesMain.zeitkonstantenT enthält die eingegebenen Zeitkonstanten
 
 
 
-%% Entscheidung, welcher Regler für die gewählte Strecke in Frage kommt
+%% Entscheidung, welches Entwurfsverfahren für die gewählte Strecke in Frage kommt
 
 % Anzahl Zeitkonstanten der Strecke
 anzT = numel(handlesMain.zeitkonstantenT);

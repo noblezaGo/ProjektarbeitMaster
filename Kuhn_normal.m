@@ -51,7 +51,9 @@ switch selectedController
         Tn = 0;
         Tv = 0.33 * TSum;
         
-    otherwise % throw error
+    otherwise 
+        % Errorhandling
+        errordlg('Error in Function "Kuhn_normal". Content of parameter "selectedController" is not allowed.');  
 end
 
 end

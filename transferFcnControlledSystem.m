@@ -29,6 +29,8 @@ switch typeOfControlledSystem
         end
         Gs = s*konstanteK/TProd * exp(-s*totzeitTt); % Übertragungsfunktion der DTn-Strecke       
 
-
+    otherwise
+        errordlg('Error in function "transferFcnControlledSystem". Content of parameter "typeOfControlledSystems" cannot be handled by the function.'); 
+       
 end
 end

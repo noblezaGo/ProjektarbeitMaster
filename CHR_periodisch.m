@@ -45,5 +45,6 @@ switch selectedController
         disp('Chosen Controller: PID');
         
     otherwise 
-        %Throw Error
+        % Errorhandling
+        errordlg('Error in Function "CHR_periodisch". Content of parameter "selectedController" is not allowed.');  
 end

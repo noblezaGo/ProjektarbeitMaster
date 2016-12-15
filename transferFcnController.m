@@ -9,7 +9,7 @@ function[Gr] = transferFcnController(Kr,Tn,Tv)
 
 s = tf('s');
 
-T1 = 1; % Zeitkonstante des Tiefpasses im D-Anteil
+T1 = 0.1; % Zeitkonstante des Tiefpasses im D-Anteil
 
 % P-Anteil des Reglers
 pAnteil = Kr;   
