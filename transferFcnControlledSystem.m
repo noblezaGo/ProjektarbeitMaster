@@ -1,17 +1,15 @@
 % Bestimmung der Übertragungsfunktion Gs der Strecke
+% konstanteK: Verstärkung K der Strecke
+% zeitkonstantenT: Array mit den Zeitkonstanten der Strecke
+% totzeitTt: Totzeit der Strecke
+% typeofControlledSystem: String der den Streckentyp beinhaltet. Funktion hat 3 Streckentypen
+% implementiert. 
+% Streckentypen: 'PTn-Strecke','ITn-Strecke','DTn-Strecke'
 function[Gs] = transferFcnControlledSystem(konstanteK,zeitkonstantenT,totzeitTt,typeOfControlledSystem)
 
 s = tf('s');
 
-% NaN ersetzen durch 0
-% Wenn die Strecke z.B. nur eine Zeitkonstante enthält, ist zeitkonstantenT(2) und zeitkonstantenT(3) = NaN 
-% zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
-% 
-% T1 = zeitkonstantenT(1);
-% T2 = zeitkonstantenT(2);
-% T3 = zeitkonstantenT(3);
-
-TProd = 1; % Startwert muss 1 sein, da in Schleife für i=1 mit 1 multipliziert werden muss
+TProd = 1; % Startwert muss 1 sein, da in Schleife für i=1(1.Schleifendurchgang) TProd definiert sein muss und mit der 1. Zeitkonstanten multipliziert wird
 switch typeOfControlledSystem
     case 'PTn-Strecke'
         for i=1:numel(zeitkonstantenT)

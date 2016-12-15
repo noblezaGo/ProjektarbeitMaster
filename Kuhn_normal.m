@@ -1,4 +1,22 @@
-% T-Summenregel nach Kuhn normal
+% Reglereinstellung nach T-Summenregel von Kuhn, normale Einstellung
+
+% Funktion gibt Reglerparameter Kr,Tn,Tv für PID-Regler zurück
+% Kr: Reglerverstärkung
+% Tn: Nachstellzeit
+% Tv: Vorhaltezeit
+
+% Der Funktion müssen Streckenparameter übergeben werden
+
+% Ks: Verstärkung K der Strecke
+
+% zeitkonstantenT: Array, das die Streckenzeitkonstanten beinhaltet
+
+% totzeitTt: Totzeit der Strecke
+
+% selectedController: Definiert den Regler, der verwendet werden soll.
+% Parameter muss vom Typ String sein. Zulässige Parameterwerte:
+% 'P-Regler', 'PI-Regler','PD-Regler' oder 'PID-Regler'
+
 function[Kr,Tn,Tv] = Kuhn_normal(Ks,zeitkonstantenT,totzeitTt,selectedController)
 
 

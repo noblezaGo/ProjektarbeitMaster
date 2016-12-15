@@ -210,9 +210,6 @@ end
 % Anzahl Zeitkonstanten der Strecke
 anzT = numel(handlesMain.zeitkonstantenT);
 
-% TO DO: ENtscheidung ob mit der ohne Totzeit : ohne Totzeit kein CHR
-% Ziegler usw
-
 switch handles.selectedControlledSystem
     case handlesMain.textPopupmenuStrecke(1)    % PTn-Strecke
          if(anzT==2)    % Strecke hat 2 Zeitkonstanten

@@ -1,4 +1,16 @@
 % Skogestad Verfahren
+% Funktion gibt Reglerparameter Kr,Tn,Tv für PID-Regler zurück
+% Kr: Reglerverstärkung
+% Tn: Nachstellzeit
+% Tv: Vorhaltezeit
+
+% Der Funktion müssen Streckenparameter übergeben werden
+% Ks: Verstärkung K der Strecke
+% zeitkonstantenT: Array, das die Streckenzeitkonstanten beinhaltet
+% totzeitTt: Totzeit der Strecke
+% streckentyp: String der den Streckentyp beinhaltet. Funktion hat 3 Streckentypen
+% implementiert. 
+% Streckentypen: 'PTn-Strecke','ITn-Strecke','DTn-Strecke'
 function[Kr,Tn,Tv]= Skogestad(Ks,zeitkonstantenT,totzeitTt,streckentyp)
 
 % Tc von Skogestad wird gleich der Totzeit angenommen
@@ -42,6 +54,9 @@ switch streckentyp
         elseif(totzeitTt~=0 && anzT==1)
             strecke = 'IT1MitTotzeit';
         end
+        
+    otherwise 
+        % THROW ERROR
 end
 
 % Abfrage ob "Strecke" existert. Wenn nicht muss Fehler geworfen werden
