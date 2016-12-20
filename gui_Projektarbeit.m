@@ -65,7 +65,7 @@ handles.textPopupmenuStrecke = {'PTn-Strecke','ITn-Strecke','DTn-Strecke'};
 handles.popupmenuStrecke.String = [{''},handles.textPopupmenuStrecke];
 
 %% Text Popupmenü Verfahren
-handles.textPopupmenuVerfahren = {'Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad'};
+handles.textPopupmenuVerfahren = {'Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad'};
 handles.popupmenuVerfahren.String = {''};
 
 
@@ -205,9 +205,22 @@ function popupmenuStrecke_Callback(hObject, eventdata, handles)
 
 % TO DO: gui_Strecke soll nicht aufgehen, wenn leeres Feld im Popupmenü
 % aufgeht
-gui_Strecke(hObject);
 
-handles.pushbuttonStreckenparameter.Enable = 'on';
+contents = cellstr(get(hObject,'String'));
+selectedItemStrecke = contents{get(hObject,'Value')};
+
+% Wenn Feld mit Inhalt im Popupmenü-Strecke angewählt wird, geht
+% das Eingabefenster der Streckenparameter auf
+if(isempty(selectedItemStrecke)==0)
+    
+    gui_Strecke(hObject);   % gui_Strecke callen
+
+    handles.pushbuttonStreckenparameter.Enable = 'on';  % Button Streckenparameter aktivieren
+else 
+    % Wenn Feld ohne Inhalt angewählt wird
+    handles.pushbuttonStreckenparameter.Enable = 'off';  % Button Streckenparameter deaktivieren
+    
+end
 
 guidata(hObject,handles);
 end
@@ -267,12 +280,22 @@ switch selectedItemVerfahren
     
     % IMMER value auf 1 zuerst zurücksetzen bevor die string property neu
     % gesetzt wird
-    case handles.textPopupmenuVerfahren(1) % Ziegler-Nichols 2.Var
+    case handles.textPopupmenuVerfahren(1) % Ziegler-Nichols 1.Var
         set(handles.popupmenuRegler, 'Value', 1); % default geben
         set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'}); % Reglerauswahl geben        
         
         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
-         handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'on';
+    
+    case handles.textPopupmenuVerfahren(2) % Ziegler-Nichols 2.Var
+        set(handles.popupmenuRegler, 'Value', 1); % default geben
+        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'}); % Reglerauswahl geben        
+        
+        % Grafik der Übertragungsfunktion des P-Reglers anzeigen
+        handles.subpanelPIRegler.Visible = 'off';
         handles.subpanelPDRegler.Visible = 'off';
         handles.subpanelPIDRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'on';
@@ -280,7 +303,7 @@ switch selectedItemVerfahren
     % Wenn CHR als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
-    case handles.textPopupmenuVerfahren(2) % CHR periodisch
+    case handles.textPopupmenuVerfahren(3) % CHR periodisch
         set(handles.popupmenuRegler, 'Value', 1);
         set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});        
         
@@ -291,7 +314,7 @@ switch selectedItemVerfahren
         handles.subpanelPRegler.Visible = 'on';
 
         
-    case handles.textPopupmenuVerfahren(3) % CHR aperiodisch
+    case handles.textPopupmenuVerfahren(4) % CHR aperiodisch
         set(handles.popupmenuRegler, 'Value', 1);
         set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});        
         
@@ -302,7 +325,7 @@ switch selectedItemVerfahren
         handles.subpanelPRegler.Visible = 'on';
         
     
-    case handles.textPopupmenuVerfahren(4)  % Kuhn normal
+    case handles.textPopupmenuVerfahren(5)  % Kuhn normal
         set(handles.popupmenuRegler, 'Value', 1);
         set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PD-Regler','PID-Regler'});        
         
@@ -313,7 +336,7 @@ switch selectedItemVerfahren
         handles.subpanelPRegler.Visible = 'on';    
       
         % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
-    case handles.textPopupmenuVerfahren(5)  % Kuhn schnell
+    case handles.textPopupmenuVerfahren(6)  % Kuhn schnell
         set(handles.popupmenuRegler, 'Value', 1);
         set(handles.popupmenuRegler, 'String', {'PI-Regler','PID-Regler'});        
         
@@ -323,7 +346,7 @@ switch selectedItemVerfahren
         handles.subpanelPRegler.Visible = 'off';
         handles.subpanelPIRegler.Visible = 'on';
         
-    case handles.textPopupmenuVerfahren(6); % Skogestad
+    case handles.textPopupmenuVerfahren(7); % Skogestad
         
         % alle Grafiken ausblenden
         handles.subpanelPDRegler.Visible = 'off';
@@ -618,37 +641,42 @@ if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
         return
     else
         switch selectedItemVerfahren
-            case handles.textPopupmenuVerfahren(1) % Ziegler-Nichols 2. Variante
+            case handles.textPopupmenuVerfahren(1) % Ziegler-Nichols 1. Variante                
+                [Kr,Tn,Tv] = ziegler_nichols_1(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
+                
+            case handles.textPopupmenuVerfahren(2) % Ziegler-Nichols 2. Variante
                 % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
                 % zurückgegeben
                 [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
-                [Kr,Tn,Tv] = ziegler_nichols(konstanteK,Ta,Tu,selectedItemController);
-            case handles.textPopupmenuVerfahren(2) % CHR periodisch
+                [Kr,Tn,Tv] = ziegler_nichols_2(konstanteK,Ta,Tu,selectedItemController);
+                
+            case handles.textPopupmenuVerfahren(3) % CHR periodisch
                 % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
                 % zurückgegeben
                 [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
                 [Kr,Tn,Tv] = CHR_periodisch(konstanteK,Ta,Tu,selectedItemController);
-           case handles.textPopupmenuVerfahren(3)   % CHR aperiodisch
+                
+           case handles.textPopupmenuVerfahren(4)   % CHR aperiodisch
                 % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
                 % zurückgegeben
                 [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
                 [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
 
-            case handles.textPopupmenuVerfahren(4)  % Kuhn normal
+            case handles.textPopupmenuVerfahren(5)  % Kuhn normal
                 [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
 
-            case handles.textPopupmenuVerfahren(5)  % Kuhn schnell
+            case handles.textPopupmenuVerfahren(6)  % Kuhn schnell
                 [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
 
-            case handles.textPopupmenuVerfahren(6)  % Skogestad
+            case handles.textPopupmenuVerfahren(7)  % Skogestad
                 [Kr,Tn,Tv] = Skogestad(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke);
         end
     end
 
     % Ausgabe der berechneten Reglerparameter P,I,D
-    set(handles.TextCalculatedP, 'String',['K = ' num2str(Kr)]);
-    set(handles.TextCalculatedI, 'String',['Tn = ' num2str(Tn)]);
-    set(handles.TextCalculatedD, 'String',['Tv = ' num2str(Tv)]);
+%     set(handles.TextCalculatedP, 'String',['K = ' num2str(Kr)]);
+%     set(handles.TextCalculatedI, 'String',['Tn = ' num2str(Tn)]);
+%     set(handles.TextCalculatedD, 'String',['Tv = ' num2str(Tv)]);
 
     %% Bestimmung der Übertragungsfunktion Gr des Reglers
     Gr = transferFcnController(Kr,Tn,Tv);

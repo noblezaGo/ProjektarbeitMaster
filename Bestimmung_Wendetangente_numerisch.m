@@ -27,7 +27,8 @@ switch anzT
         H = @(s) K/((zeitkonstantenT(1)*s+1)*(zeitkonstantenT(2)*s+1)*(zeitkonstantenT(3)*s+1) * s) * exp(-s*totzeitTt);
         
     otherwise
-        % Throw Error
+        % Errorhandling
+        errordlg('Error in Function "Bestimmung_Wendetangente_numerisch". Function cannot handle amount of given time constants');
 end
 
 % for i=1:numel(zeitkonstantenT)
@@ -47,8 +48,12 @@ dt = 0.01;
 time = 0.01:dt:simulationTime;
 
 % Funktion talbot_inversion führt numerische Laplace-Transformation durch
+if(exist('H','var'))
 h = talbot_inversion(H,time);
-
+else 
+    % Errorhandling
+        errordlg('Error in Function "Bestimmung_Wendetangente_numerisch". Variable H does not exist');
+end
 %% Wendepunkt berechnen -> größte Steigung
 dh = zeros(length(h)-1,1);
 for i=1:1:length(h)-1
