@@ -46,4 +46,5 @@ switch selectedController
     otherwise
         % Errorhandling
         errordlg('Error in Function "ziegler_nichols_2". Content of parameter "selectedController" is not allowed.');  
+        return
 end

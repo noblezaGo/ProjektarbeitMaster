@@ -6,16 +6,18 @@
 
 function gui_Strecke(hObjectMain)
 
+
+
 % GUI-figure zur Eingabe der Streckenparameter
-handles.fig = figure('WindowStyle','modal','position',[0 700 500 600],'MenuBar','none','Name','Streckenparameter','NumberTitle','off','OuterPosition',[230 150 650 400],'color','white');
+handles.figStreckenparameter = figure('WindowStyle','modal','position',[0 700 500 600],'MenuBar','none','Name','Streckenparameter','NumberTitle','off','OuterPosition',[230 150 650 400],'color','white','CloseRequestFcn',@gui_Strecke_closeRequestFcn);
+
 
 handles.hObjectMain = hObjectMain;
-handlesMain = guidata(hObjectMain);
+handlesMain = guidata(handles.hObjectMain);
 
-contentPopupmenuStrecke = get(handlesMain.popupmenuStrecke,'String');
 % Ausgewählten Streckentyp auslesen
+contentPopupmenuStrecke = get(handlesMain.popupmenuStrecke,'String');
 handles.selectedControlledSystem = contentPopupmenuStrecke{get(handlesMain.popupmenuStrecke,'Value')};
-
 
 
 switch handles.selectedControlledSystem
@@ -86,10 +88,20 @@ handles.textT3 = uicontrol('style','text','position',[50 100 50 20],'Visible','o
 handles.editT3 = uicontrol('style','edit','position',[100 100 100 20],'Visible','off');
 
 % Button "Übernehmen"
-handles.buttonApply = uicontrol('style','pushbutton','position',[200 50 100 30],'String','Übernehmen','Callback',@pushbutton_Apply_Callback);
+handles.buttonApply = uicontrol('style','pushbutton','position',[275 50 100 30],'String','Übernehmen','Callback',@pushbutton_Apply_Callback);
 
 
-guidata(handles.fig,handles);
+% handles Struktur dieser Funktion wird zu handles.figStreckenparameter hinzugefügt. Die 
+% figure "figStreckenparameter" (GUI-Fenster für Streckenparameter) enthält nun die handles Struktur
+guidata(handles.figStreckenparameter,handles);
+
+% Der handles Struktur der mainfigure (GUI der Hauptfensters) hObjectMain wird die figure "figStreckenparameter"
+% hinzugefügt. Über die Struktur der mainfigure kann nun auf
+% "figStreckenparameter zugegriffen werden.
+% handlesMain.figStrecke = handles.figStreckenparameter;
+% disp(handlesMain);
+% guidata(handles.hObjectMain,handlesMain);
+% guidata(handles.hObjectMain);
 
 end
 
@@ -251,23 +263,6 @@ if(isfield(handles,'anzahlT'))
 end
 
 
-
-% zeitkonstantenTRaw = [T1 T2 T3];
-% 
-% % Array aus den Zeitkonstanten 
-% 
-% for i=1:numel(zeitkonstantenTRaw)
-%     % Wenn Element ein numerisches Element und ungleich null ist, wird es
-%     % dem Array handlesMain.zeitkonstantenT hinzugefügt
-%    if(isnan(zeitkonstantenTRaw(i))==0 && zeitkonstantenTRaw(i)~=0)
-%        handlesMain.zeitkonstantenT(end+1) = zeitkonstantenTRaw(i);
-%    end
-% end
-
-% handlesMain.zeitkonstantenT enthält die eingegebenen Zeitkonstanten
-
-
-
 %% Entscheidung, welches Entwurfsverfahren für die gewählte Strecke in Frage kommt
 
 % Anzahl Zeitkonstanten der Strecke
@@ -317,13 +312,40 @@ end
 
 handlesMain.popupmenuVerfahren.Enable = 'on';
 
-% figure ausblenden
-handles.fig.Visible = 'off';
-        
+% figure ausblenden. Bei Klick auf Button "Streckenparameter" wird die
+% figure wieder sichtbar gemacht. Alle zuvor eingegebenen Daten sind noch
+% vorhanden. Bei Anwahl einer Strecke über das Popupmenü "Regelstrecke"
+% wird die figure neu geöffnet und alle zuvor eingegebenen Daten sind
+% verloren
+handles.figStreckenparameter.Visible = 'off';
+
+handlesMain.figStreckenparameter = handles.figStreckenparameter;
 
 % Aktualisierung der main handles von der figure gui_Projektarbeit
 guidata(handles.hObjectMain,handlesMain);
 % Aktualisierung der handles der figure gui_Strecke
 guidata(hObject,handles);
   
+
+   
 end
+
+% Wird aufgerufen, wenn Benutzer Fenster "Streckenparameter" schließt
+ function gui_Strecke_closeRequestFcn(hObject,eventdata)
+ 
+ % Handles der figure gui_Strecke
+handles = guidata(hObject);
+ % Handles der mainfigure gui_Projektarbeit
+handlesMain = guidata(handles.hObjectMain);
+
+% Bevor das Fenster geschlossen wird, wird das handle der figure
+% "figStreckenparameter" aus der handles Struktur der mainfigure gelöscht
+if(isfield(handlesMain,'figStreckenparameter'))
+    handlesMain = rmfield(handlesMain,'figStreckenparameter');
+    
+    % Aktualisierung der handles von der mainfigure gui_Projektarbeit
+    guidata(handles.hObjectMain,handlesMain);
+end
+% Fenster Streckenparameter schließen
+delete(handles.figStreckenparameter);
+ end

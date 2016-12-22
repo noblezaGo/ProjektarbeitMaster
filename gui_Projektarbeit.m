@@ -22,7 +22,7 @@ function varargout = gui_Projektarbeit(varargin)
 
 % Edit the above text to modify the response to help gui_Projektarbeit
 
-% Last Modified by GUIDE v2.5 02-Dec-2016 10:08:01
+% Last Modified by GUIDE v2.5 22-Dec-2016 12:24:39
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -53,6 +53,8 @@ function gui_Projektarbeit_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   unrecognized PropertyName/PropertyValue pairs from the
 %            command line (see VARARGIN)
+
+
 
 %% Defaulteinstellungen Bedienmöglichkeiten. Buttons/Popupmenüs die am Anfang nicht bedient werden sollen werden ausgegraut.
 handles.popupmenuVerfahren.Enable = 'off';  % Ausgrauen des Popupmenüs Verfahren
@@ -172,7 +174,7 @@ xlabel('t in s');
 ylabel('y(t)');
 
 % Choose default command line output for gui_Projektarbeit
-handles.output = hObject;
+%handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
@@ -190,7 +192,7 @@ function varargout = gui_Projektarbeit_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-varargout{1} = handles.output;
+%varargout{1} = handles.output;
 end
 
 % --- Executes on selection change in popupmenuStrecke.
@@ -202,10 +204,6 @@ function popupmenuStrecke_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenuStrecke contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenuStrecke
 
-
-% TO DO: gui_Strecke soll nicht aufgehen, wenn leeres Feld im Popupmenü
-% aufgeht
-
 contents = cellstr(get(hObject,'String'));
 selectedItemStrecke = contents{get(hObject,'Value')};
 
@@ -213,7 +211,7 @@ selectedItemStrecke = contents{get(hObject,'Value')};
 % das Eingabefenster der Streckenparameter auf
 if(isempty(selectedItemStrecke)==0)
     
-    gui_Strecke(hObject);   % gui_Strecke callen
+    gui_Strecke(hObject);   % gui_Strecke callen    
 
     handles.pushbuttonStreckenparameter.Enable = 'on';  % Button Streckenparameter aktivieren
 else 
@@ -247,7 +245,24 @@ function pushbuttonStreckenparameter_Callback(hObject, eventdata, handles)
 
 % Das handle zu diesem pushbutton wird der GUI zur Eingabe der
 % Streckenparameter übergeben
-gui_Strecke(hObject);
+
+% Wenn figure "figStreckenparameter" in den handles existiert, wird das Fenster zur Eingabe der Streckenparameter sichtbar
+% gemacht. "figStreckenparameter" wird beim Drücken des Übernehmen
+% Pushbuttons zu den handles der mainfigure hinzugefügt.
+if(isfield(handles,'figStreckenparameter'))
+    handles.figStreckenparameter.Visible = 'on';
+    
+% Wenn Fenster zur Eingabe der Streckenparameter schon einmal über das
+% Popupmenü "Regelstrecke" geöffnet wurde, aber nicht übernehmen gedrückt
+% wurde, ist der Pushbutton "Streckenparameter" sichtbar. Die figure
+% "figStreckenparameter" wurde dann aber nicht den handles der mainfigure
+% hinzugefügt. Drücken des Pushbuttons "Streckenparameter" soll dann das
+% Fenster zur Eingabe der Streckenparameter neu öffnen.
+else 
+    gui_Strecke(hObject);   % gui_Strecke callen  
+end
+
+%gui_Strecke(hObject);
 % Die eingegebenen Streckenparameter werden von der gui_Strecke im handle
 % "handles" gespeichert und stehen somit in diesem m-File zur Verfügung
 end
