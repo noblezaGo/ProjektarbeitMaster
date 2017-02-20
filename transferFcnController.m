@@ -1,14 +1,18 @@
 % Bestimmung der Übertragungsfunktion des Reglers
-% Funktion erstellt einen PID-Regler aus den Parametern Kr,Tn,Tv
+% Funktion erstellt einen Regler aus den Parametern Kr,Tn,Tv
 % Kr: Reglerverstärkung
 % Tn: Nachstellsteit
 % Tv: Vorhaltezeit
+
 % Für P-Regler: Tn,Tv == 0 an Funktion übergeben
 % Für PI-Regler: Tv == 0 an Funktion übergeben
+% Für PD-Regler: Tn == 0 an Funktion übergeben
+
 function[Gr] = transferFcnController(Kr,Tn,Tv)
 
 s = tf('s');
 
+% TO DO: idealer oder realer PID?
 T1 = 0.1; % Zeitkonstante des Tiefpasses im D-Anteil
 
 % P-Anteil des Reglers

@@ -272,12 +272,12 @@ switch handles.selectedControlledSystem
     case handlesMain.textPopupmenuStrecke(1)    % PTn-Strecke
          if(anzT==2)    % Strecke hat 2 Zeitkonstanten
             handlesMain.popupmenuVerfahren.Value = 1; % bevor string property neu gesetzt wird immer value property auf 1 zurücksetzen, sonst kommt warning und popupmenü wird ausgeblendet
-            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad'};
+            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
          end
          if(anzT==3)    % Strecke hat 3 Zeitkonstanten
             handlesMain.popupmenuVerfahren.Value = 1; % bevor string property neu gesetzt wird immer value property auf 1 zurücksetzen, sonst kommt warning und popupmenü wird ausgeblendet
-            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell'};
+            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
          end
          if(anzT==1)    % Strecke hat 1 Zeitkonstante
@@ -299,8 +299,8 @@ switch handles.selectedControlledSystem
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
          else % Strecke hat 2 oder 3 Zeitkonstanten
              handlesMain.popupmenuVerfahren.Value = 1;
-            handlesMain.popupmenuVerfahren.String = {''};
-            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'off';
+            handlesMain.popupmenuVerfahren.String = {'','Reinisch'};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
          
          end
         

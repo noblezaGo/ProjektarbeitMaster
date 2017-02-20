@@ -7,10 +7,15 @@
 % umgerechnet werden
 function[Kr,Tn,Tv] = Reinisch(Ks,zeitkonstantenT,totzeitTt,streckentyp,ueberschwingweite,selectedController)
 
+% Kr, Tn, Tv initialisieren mit 0
+Kr = 0;
+Tn = 0;
+Tv = 0;
+
 anzT = numel(zeitkonstantenT);
 
 % Sortierung der Zeitkonstanten nach absteigender Größe
-zeitkonstantenTSort = sort(zeitkonstantenT,'descent');
+zeitkonstantenTSort = sort(zeitkonstantenT,'descend');
 
 % Regelstrecke wird in Programm in der Form K/prod(1+Ti*s), i=1..n eingegeben
 % Für Reinisch Verfahren wird die Strecke in der Form
@@ -46,32 +51,32 @@ C2ZweiStrich = C2-zeitkonstantenTSort(1)*C1Strich-zeitkonstantenTSort(2)*C1ZweiS
 
 % Vorgabe der Parameter a und c für die gewünschte Überschungweite der
 % Sprungantwort
-switch ueberschwungweite
-    case 0
+switch ueberschwingweite
+    case '0%'
         a = 4;
         c = 0;
-    case 5
+    case '5%'
         a = 1.9;
         c = 0;
-    case 10
+    case '10%'
         a = 1.4;
         c = 1;
-    case 15
+    case '15%'
         a = 1;
         c = 1;
-    case 20
+    case '20%'
         a = 0.83;
         c = 1.4;
-    case 30
+    case '30%'
         a = 0.51;
         c = 1.4;
-    case 40
+    case '40%'
         a = 0.31;
         c = 1.4;
-    case 50
+    case '50%'
         a = 0.18;
         c = 1.4;
-    case 60
+    case '60%'
         a = 0.11;
         c = 1.4;
     otherwise
@@ -99,6 +104,8 @@ switch streckentyp
 
                     % Reglerparameter zuweisen
                     Kr = zeitkonstantenTSort(1)/(Ks*ak*C1Strich);
+                    
+                  
         
             case 'I-Regler'
                 gamma = C2/C1^2;
@@ -119,7 +126,7 @@ switch streckentyp
                 
                 % keine Beschränkungen
                 
-                Kir = 1/Ks*ak*C1Strich;
+                Kir = 1/(Ks*ak*C1Strich);
                 Td = zeitkonstantenTSort(1);
                 
                 % Umwandlung in PI-Regler Form G=Kr*(1+1/Tn*s)

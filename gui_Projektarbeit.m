@@ -67,7 +67,7 @@ handles.textPopupmenuStrecke = {'PTn-Strecke','ITn-Strecke','DTn-Strecke'};
 handles.popupmenuStrecke.String = [{''},handles.textPopupmenuStrecke];
 
 %% Text Popupmenü Verfahren
-handles.textPopupmenuVerfahren = {'Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad'};
+handles.textPopupmenuVerfahren = {'Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad','Reinisch'};
 handles.popupmenuVerfahren.String = {''};
 
 
@@ -163,6 +163,10 @@ handles.subpanelSprungantwortClosedLoop = uipanel(handles.buttongroupPlot,'Backg
 handles.axesSprungantwortClosedLoop = axes(handles.subpanelSprungantwortClosedLoop,'Units','normalized','Position',[0,0,1,1]);
 image(handles.axesSprungantwortClosedLoop,handles.grafikSprungantwortClosedLoop);
 axis off
+
+%% Popupmenü Überschwingweite für Reinisch
+handles.textUeberschwingweite = uicontrol('style','text','position',[260 472 120 20],'FontSize',8,'BackgroundColor','white','Visible','off','String','Überschwingweite:');
+handles.popupmenuUeberschwingweite = uicontrol('style','popupmenu','position',[400 475 100 20],'Visible','off','String',{'0%' '5%' '10%' '15%' '20%' '30%' '40%' '50%' '60%'},'Callback',@popupmenuUeberschwingweite_Callback);
 
 
 %% Figure zum Plotten der Sprungantwort
@@ -406,6 +410,39 @@ switch selectedItemVerfahren
                     handles.subpanelPIDRegler.Visible = 'on';
                 end
         end
+        
+      case handles.textPopupmenuVerfahren(8); % Reinisch
+        
+        % alle Grafiken ausblenden, Grafik P-Regler einblenden
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'on';
+        
+        % Wenn PTn-Strecke gewählt wurde steht P,PI,I,PD,PID-Regler zur
+        % Verfügung.
+        % Wenn ITn-Strecke gewählt wurde steht P und PD-Regler zur
+        % Verfügung
+        contentPopupmenuStrecke = get(handles.popupmenuStrecke,'String');
+        selectedControlledSystem = contentPopupmenuStrecke{get(handles.popupmenuStrecke,'Value')};
+               
+        set(handles.popupmenuRegler, 'Value', 1);    
+        
+        switch selectedControlledSystem
+            
+            case handles.textPopupmenuStrecke(1)    % PTn-Strecke            
+                handles.popupmenuRegler.String = {'P-Regler','PI-Regler','I-Regler','PD-Regler','PID-Regler'};
+            
+            case handles.textPopupmenuStrecke(2) % ITn-Strecke
+                handles.popupmenuRegler.String = {'P-Regler','PD-Regler'};            
+            
+        end
+        
+        handles.textUeberschwingweite.Visible = 'on';
+        handles.popupmenuUeberschwingweite.Visible = 'on';
+        
+        
+            
             
 end
         
@@ -414,6 +451,8 @@ set(handles.popupmenuRegler,'Enable','on');
 
 guidata(hObject,handles);
 end
+
+
 
 % --- Executes during object creation, after setting all properties.
 function popupmenuVerfahren_CreateFcn(hObject, eventdata, handles)
@@ -429,6 +468,13 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 end
 
+% Popupmenü zur Einstellung der Überschwungweite beim Reinisch Verfahren
+function popupmenuUeberschwingweite_Callback(hObject,eventdata,handles)
+
+contents = cellstr(get(hObject,'String'));
+selectedUeberschwingweite = contents{get(hObject,'Value')};
+
+end
 
 % --- Executes on selection change in popupmenuRegler.
 function popupmenuRegler_Callback(hObject, eventdata, handles)
@@ -685,6 +731,12 @@ if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
 
             case handles.textPopupmenuVerfahren(7)  % Skogestad
                 [Kr,Tn,Tv] = Skogestad(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke);
+                
+            case handles.textPopupmenuVerfahren(8) % Reinisch
+                % Eingegebene Überschwungweite auslesen
+                content = get(handles.popupmenuUeberschwingweite,'String');
+                ueberschwingweite = content{get(handles.popupmenuUeberschwingweite,'Value')};
+                [Kr,Tn,Tv] = Reinisch(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke,ueberschwingweite,selectedItemController);
         end
     end
 
