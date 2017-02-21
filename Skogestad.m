@@ -19,21 +19,7 @@ Tc = totzeitTt;
 % Reglereinstellungen werden in Abhängigkeit des Streckentyps vorgenommen
 %% Bestimmung des Streckentyps
 
-% NaN ersetzen durch 0
-% Wenn die Strecke z.B. nur eine Zeitkonstante enthält, ist zeitkonstantenT(2) und zeitkonstantenT(3) = NaN 
-% zeitkonstantenT(isnan(zeitkonstantenT)) = 0;
-% T = [];
-% 
-% % Anzahl Streckenzeitkonstanten bestimmen
-% % Abfrage wieviele Zahlen im Array "zeitkonstantenT" ungleich 0 sind
-% for i=1:numel(zeitkonstantenT)
-%     if(zeitkonstantenT(i)~=0)
-%         T(i) = zeitkonstantenT(i);
-%     end
-% end
 
-% Anzahl Streckenkonstanten
-% anzT = numel(T);
 anzT = numel(zeitkonstantenT);
 
 switch streckentyp
@@ -43,7 +29,8 @@ switch streckentyp
         
         elseif(totzeitTt~=0 && anzT==2)
             strecke = 'PT2MitTotzeit';
-        end
+            
+         end
         
     
 
@@ -52,7 +39,8 @@ switch streckentyp
             strecke = 'IMitTotzeit';        
         
         elseif(totzeitTt~=0 && anzT==1)
-            strecke = 'IT1MitTotzeit';
+            strecke = 'IT1MitTotzeit';            
+        
         end
         
     otherwise 
@@ -60,6 +48,8 @@ switch streckentyp
         errordlg('Error in Function "Skogestad". Content of parameter "streckentyp" cannot be handled by the function.');  
 end
 
+% Errorhandling wenn übergebene Parameter nicht für Skogestad Methode
+% geeignet sind
 % Abfrage ob "Strecke" existert. Wenn nicht muss Fehler geworfen werden
 if(exist('strecke','var')==0)
     % Errorhandling

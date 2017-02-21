@@ -72,7 +72,7 @@ handles.popupmenuVerfahren.String = {''};
 
 
 %% Text Popupmenü Regler
-handles.textPopupmenuRegler = {'P-Regler','PI-Regler','PD-Regler','PID-Regler'}
+handles.textPopupmenuRegler = {'P-Regler','PI-Regler','PD-Regler','PID-Regler'};
 handles.popupmenuRegler.String = {''};
 
 
@@ -121,6 +121,21 @@ handles.axesPDRegler = axes(handles.subpanelPDRegler,'Units','normalized','Posit
 image(handles.axesPDRegler,handles.grafikUebertragungsfunktionPDRegler);
 axis off
 
+%% Anzeige Grafik I-Regler
+handles.grafikUebertragungsfunktionIRegler=imread('UebertragungsfunktionIRegler','png');   % Einlesen der Grafik 
+ % Bildgröße bestimmen
+ % heightImgPRegler: Höhe der Grafik
+ % widthImgPRegler: Breite der Grafik
+[heightImgIRegler,widthImgIRegler,dimImgIRegler] = size(handles.grafikUebertragungsfunktionIRegler);
+
+% Subpanel mit der Größe des Bildes des I-Reglers erstellen
+handles.subpanelIRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[220,29,widthImgIRegler,heightImgIRegler],'Visible','off');
+% Axes wird in Subpanel erstellt
+handles.axesIRegler = axes(handles.subpanelIRegler,'Units','normalized','Position',[0,0,1,1]);
+% Bild wird in Axes angezeigt
+image(handles.axesIRegler,handles.grafikUebertragungsfunktionIRegler);
+axis off
+
 
 %% Anzeige Grafik PID-Regler
 handles.grafikUebertragungsfunktionPIDRegler=imread('UebertragungsfunktionPIDRegler','png');   % Einlesen der Grafik 
@@ -166,7 +181,7 @@ axis off
 
 %% Popupmenü Überschwingweite für Reinisch
 handles.textUeberschwingweite = uicontrol('style','text','position',[260 472 120 20],'FontSize',8,'BackgroundColor','white','Visible','off','String','Überschwingweite:');
-handles.popupmenuUeberschwingweite = uicontrol('style','popupmenu','position',[400 475 100 20],'Visible','off','String',{'0%' '5%' '10%' '15%' '20%' '30%' '40%' '50%' '60%'},'Callback',@popupmenuUeberschwingweite_Callback);
+handles.popupmenuUeberschwingweite = uicontrol('style','popupmenu','position',[400 475 100 20],'Visible','off','String',{'0%' '5%' '10%' '15%' '20%' '30%' '40%' '50%' '60%'});
 
 
 %% Figure zum Plotten der Sprungantwort
@@ -307,7 +322,12 @@ switch selectedItemVerfahren
         handles.subpanelPIRegler.Visible = 'off';
         handles.subpanelPDRegler.Visible = 'off';
         handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'on';
+        
+        % Popupmenü Überschwingweite ausblenden
+        handles.textUeberschwingweite.Visible = 'off';
+        handles.popupmenuUeberschwingweite.Visible = 'off';
     
     case handles.textPopupmenuVerfahren(2) % Ziegler-Nichols 2.Var
         set(handles.popupmenuRegler, 'Value', 1); % default geben
@@ -317,7 +337,12 @@ switch selectedItemVerfahren
         handles.subpanelPIRegler.Visible = 'off';
         handles.subpanelPDRegler.Visible = 'off';
         handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'on';
+        
+        % Popupmenü Überschwingweite ausblenden
+        handles.textUeberschwingweite.Visible = 'off';
+        handles.popupmenuUeberschwingweite.Visible = 'off';
         
     % Wenn CHR als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
@@ -330,7 +355,12 @@ switch selectedItemVerfahren
         handles.subpanelPIRegler.Visible = 'off';
         handles.subpanelPDRegler.Visible = 'off';
         handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'on';
+        
+        % Popupmenü Überschwingweite ausblenden
+        handles.textUeberschwingweite.Visible = 'off';
+        handles.popupmenuUeberschwingweite.Visible = 'off';
 
         
     case handles.textPopupmenuVerfahren(4) % CHR aperiodisch
@@ -341,7 +371,12 @@ switch selectedItemVerfahren
         handles.subpanelPIRegler.Visible = 'off';
         handles.subpanelPDRegler.Visible = 'off';
         handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'on';
+        
+        % Popupmenü Überschwingweite ausblenden
+        handles.textUeberschwingweite.Visible = 'off';
+        handles.popupmenuUeberschwingweite.Visible = 'off';
         
     
     case handles.textPopupmenuVerfahren(5)  % Kuhn normal
@@ -352,7 +387,12 @@ switch selectedItemVerfahren
          handles.subpanelPIRegler.Visible = 'off';
         handles.subpanelPDRegler.Visible = 'off';
         handles.subpanelPIDRegler.Visible = 'off';
-        handles.subpanelPRegler.Visible = 'on';    
+        handles.subpanelIRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'on';  
+        
+        % Popupmenü Überschwingweite ausblenden
+        handles.textUeberschwingweite.Visible = 'off';
+        handles.popupmenuUeberschwingweite.Visible = 'off';
       
         % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
     case handles.textPopupmenuVerfahren(6)  % Kuhn schnell
@@ -363,7 +403,12 @@ switch selectedItemVerfahren
         handles.subpanelPDRegler.Visible = 'off';
         handles.subpanelPIDRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'off';
         handles.subpanelPIRegler.Visible = 'on';
+        
+        % Popupmenü Überschwingweite ausblenden
+        handles.textUeberschwingweite.Visible = 'off';
+        handles.popupmenuUeberschwingweite.Visible = 'off';
         
     case handles.textPopupmenuVerfahren(7); % Skogestad
         
@@ -371,7 +416,12 @@ switch selectedItemVerfahren
         handles.subpanelPDRegler.Visible = 'off';
         handles.subpanelPIDRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'off';
         handles.subpanelPIRegler.Visible = 'off';
+        
+        % Popupmenü Überschwingweite ausblenden
+        handles.textUeberschwingweite.Visible = 'off';
+        handles.popupmenuUeberschwingweite.Visible = 'off';
         
         % Je nach gewählter Strecke und Anzahl Zeitkonstanten steht entweder PI-oder
         % PID-Regler zur Verfügung
@@ -417,6 +467,7 @@ switch selectedItemVerfahren
         handles.subpanelPDRegler.Visible = 'off';
         handles.subpanelPIDRegler.Visible = 'off';
         handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'off';
         handles.subpanelPRegler.Visible = 'on';
         
         % Wenn PTn-Strecke gewählt wurde steht P,PI,I,PD,PID-Regler zur
@@ -438,6 +489,7 @@ switch selectedItemVerfahren
             
         end
         
+        % Popupmenü Überschwingweite einblenden
         handles.textUeberschwingweite.Visible = 'on';
         handles.popupmenuUeberschwingweite.Visible = 'on';
         
@@ -468,14 +520,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 end
 
-% Popupmenü zur Einstellung der Überschwungweite beim Reinisch Verfahren
-function popupmenuUeberschwingweite_Callback(hObject,eventdata,handles)
-
-contents = cellstr(get(hObject,'String'));
-selectedUeberschwingweite = contents{get(hObject,'Value')};
-
-end
-
 % --- Executes on selection change in popupmenuRegler.
 function popupmenuRegler_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenuRegler (see GCBO)
@@ -492,31 +536,44 @@ selectedController = contents{get(hObject,'Value')};
 switch selectedController
     case 'P-Regler' 
      % Grafik der Übertragungsfunktion des P-Reglers anzeigen
-    handles.subpanelPIRegler.Visible = 'off';
-    handles.subpanelPDRegler.Visible = 'off';
-    handles.subpanelPIDRegler.Visible = 'off';
-    handles.subpanelPRegler.Visible = 'on';
+        handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'on';
     
     % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
     case 'PI-Regler'
-    handles.subpanelPIDRegler.Visible = 'off';
-    handles.subpanelPDRegler.Visible = 'off';
-    handles.subpanelPRegler.Visible = 'off';
-    handles.subpanelPIRegler.Visible = 'on';
+        handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'off';
+        handles.subpanelPIRegler.Visible = 'on';
     
     % Grafik der Übertragungsfunktion des PD-Reglers anzeigen
     case 'PD-Regler'
-    handles.subpanelPIDRegler.Visible = 'off';
-    handles.subpanelPRegler.Visible = 'off';
-    handles.subpanelPIRegler.Visible = 'off';
-    handles.subpanelPDRegler.Visible = 'on';
+        handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelPRegler.Visible = 'off';
+        handles.subpanelPIRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'off';
+        handles.subpanelPDRegler.Visible = 'on';
    
     % Grafik der Übertragungsfunktion des PID-Reglers anzeigen
     case 'PID-Regler'       
-    handles.subpanelPRegler.Visible = 'off';
-    handles.subpanelPDRegler.Visible = 'off';
-    handles.subpanelPIRegler.Visible = 'off'; 
-    handles.subpanelPIDRegler.Visible = 'on';
+        handles.subpanelPRegler.Visible = 'off';
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIRegler.Visible = 'off'; 
+        handles.subpanelIRegler.Visible = 'off';
+        handles.subpanelPIDRegler.Visible = 'on';
+    
+    % Grafik der Übertragungsfunktion des I-Reglers anzeigen
+    case 'I-Regler'
+        handles.subpanelPRegler.Visible = 'off';
+        handles.subpanelPDRegler.Visible = 'off';
+        handles.subpanelPIRegler.Visible = 'off'; 
+        handles.subpanelPIDRegler.Visible = 'off';
+        handles.subpanelIRegler.Visible = 'on';
+
     
    
 end        
@@ -746,7 +803,7 @@ if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
 %     set(handles.TextCalculatedD, 'String',['Tv = ' num2str(Tv)]);
 
     %% Bestimmung der Übertragungsfunktion Gr des Reglers
-    Gr = transferFcnController(Kr,Tn,Tv);
+    Gr = transferFcnController(Kr,Tn,Tv,selectedItemController);
 
 
 

@@ -205,10 +205,10 @@ end
 
 % Totzeit Tt einlesen
 Tt = str2double(get(handles.editTt,'String'));
-if(isnan(Tt)==0 && Tt>0)
+if(isnan(Tt)==0 && Tt>=0)
     handlesMain.totzeitTt = Tt;
 else
-    errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
+    errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Zahlen einschließlich Null');
     return
 end
     
@@ -270,17 +270,23 @@ anzT = numel(handlesMain.zeitkonstantenT);
 
 switch handles.selectedControlledSystem
     case handlesMain.textPopupmenuStrecke(1)    % PTn-Strecke
-         if(anzT==2)    % Strecke hat 2 Zeitkonstanten
+         if(anzT==2 && Tt>0)    % Strecke hat 2 Zeitkonstanten und eine Totzeit
             handlesMain.popupmenuVerfahren.Value = 1; % bevor string property neu gesetzt wird immer value property auf 1 zurücksetzen, sonst kommt warning und popupmenü wird ausgeblendet
             handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
-         end
-         if(anzT==3)    % Strecke hat 3 Zeitkonstanten
+         elseif(anzT==2 && Tt==0) % 2 Zeitkonstanten, keine Totozeit -> keine Skogestad
             handlesMain.popupmenuVerfahren.Value = 1; % bevor string property neu gesetzt wird immer value property auf 1 zurücksetzen, sonst kommt warning und popupmenü wird ausgeblendet
             handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
          end
-         if(anzT==1)    % Strecke hat 1 Zeitkonstante
+         
+         if(anzT==3)    % Strecke hat 3 Zeitkonstanten 
+            handlesMain.popupmenuVerfahren.Value = 1; % bevor string property neu gesetzt wird immer value property auf 1 zurücksetzen, sonst kommt warning und popupmenü wird ausgeblendet
+            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Reinisch'};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';                     
+         end
+         
+         if(anzT==1 && Tt>0)    % Strecke hat 1 Zeitkonstante und eine Totzeit
              handlesMain.popupmenuVerfahren.Value = 1;
             handlesMain.popupmenuVerfahren.String = {'','Skogestad'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
@@ -293,11 +299,17 @@ switch handles.selectedControlledSystem
          
          
     case handlesMain.textPopupmenuStrecke(2)    % ITn-Strecke
-         if(anzT<=1) % Strecke hat 0 oder 1 Zeitkonstanten
+         if(anzT<=1 && Tt>0) % Strecke hat 0 oder 1 Zeitkonstanten und eine Totzeit
              handlesMain.popupmenuVerfahren.Value = 1;
             handlesMain.popupmenuVerfahren.String = {'','Skogestad'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
-         else % Strecke hat 2 oder 3 Zeitkonstanten
+         elseif(anzT<=1 && Tt==0) % Strecke hat 0 oder 1 Zeitkonstanten, keine Totzeit -> kein Skogestad
+             handlesMain.popupmenuVerfahren.Value = 1;
+             handlesMain.popupmenuVerfahren.String = {''};
+             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'off';
+         end
+             
+         if(anzT==2||anzT==3)% Strecke hat 2 oder 3 Zeitkonstanten
              handlesMain.popupmenuVerfahren.Value = 1;
             handlesMain.popupmenuVerfahren.String = {'','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
