@@ -22,19 +22,19 @@ switch typeOfController
         
     case 'PI-Regler'
         if(Tn>0)
-            Gr = Kr/(Tn*s);
+            Gr = Kr*(1 + 1/(Tn*s));
         end
         
     case 'PID-Regler'
         if(Tn>0)
             % TO DO: idealer oder realer PID?
             T1 = 0.1; % Zeitkonstante des Tiefpasses im D-Anteil
-            Gr = Kr*(1+1/(Tn*s)+Tv*s/(1+T1*s));
+            Gr = Kr*(1 + 1/(Tn*s) + Tv*s/(1+T1*s));
         end
         
     case 'PD-Regler'
         T1 = 0.1; % Zeitkonstante des Tiefpasses im D-Anteil
-        Gr = Kr*(1+Tv*s/(1+T1*s));
+        Gr = Kr*(1 + Tv*s/(1+T1*s));
         
     case 'I-Regler'
         Gr = Kr/s;

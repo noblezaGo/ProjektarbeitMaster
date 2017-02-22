@@ -481,8 +481,18 @@ switch selectedItemVerfahren
         
         switch selectedControlledSystem
             
-            case handles.textPopupmenuStrecke(1)    % PTn-Strecke            
-                handles.popupmenuRegler.String = {'P-Regler','PI-Regler','I-Regler','PD-Regler','PID-Regler'};
+            % bei PT2-Strecke oder höhere Ordnung stehen alle Regler zur
+            % Verfügung
+            % bei PT1-Strecke nur P-Regler,I-Regler,PI-Regler
+            case handles.textPopupmenuStrecke(1)    % PTn-Strecke 
+                % Anzahl Zeitkonstanten
+                anzT = numel(handles.zeitkonstantenT);
+                
+                if(anzT>=2)
+                    handles.popupmenuRegler.String = {'P-Regler','PI-Regler','I-Regler','PD-Regler','PID-Regler'};
+                elseif(anzT==1)
+                    handles.popupmenuRegler.String = {'P-Regler','PI-Regler','I-Regler'};
+                end
             
             case handles.textPopupmenuStrecke(2) % ITn-Strecke
                 handles.popupmenuRegler.String = {'P-Regler','PD-Regler'};            

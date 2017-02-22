@@ -288,8 +288,14 @@ switch handles.selectedControlledSystem
          
          if(anzT==1 && Tt>0)    % Strecke hat 1 Zeitkonstante und eine Totzeit
              handlesMain.popupmenuVerfahren.Value = 1;
-            handlesMain.popupmenuVerfahren.String = {'','Skogestad'};
+            handlesMain.popupmenuVerfahren.String = {'','Skogestad','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
+            
+         elseif(anzT==1 && Tt==0)   % Strecke hat 1 Zeitkonstante und keine Totzeit
+             handlesMain.popupmenuVerfahren.Value = 1;
+            handlesMain.popupmenuVerfahren.String = {'','Reinisch'};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
+             
          end
          if(anzT==0) % Strecke ohne Zeitkonstante
              handlesMain.popupmenuVerfahren.Value = 1;
@@ -299,13 +305,18 @@ switch handles.selectedControlledSystem
          
          
     case handlesMain.textPopupmenuStrecke(2)    % ITn-Strecke
-         if(anzT<=1 && Tt>0) % Strecke hat 0 oder 1 Zeitkonstanten und eine Totzeit
-             handlesMain.popupmenuVerfahren.Value = 1;
+        if(anzT==0 && Tt>0) % Strecke hat keine Zeitkonstante, hat Totzeit
+            handlesMain.popupmenuVerfahren.Value = 1;
             handlesMain.popupmenuVerfahren.String = {'','Skogestad'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
-         elseif(anzT<=1 && Tt==0) % Strecke hat 0 oder 1 Zeitkonstanten, keine Totzeit -> kein Skogestad
+            
+        elseif(anzT==1 && Tt>0) % Strecke hat 1 Zeitkonstante und eine Totzeit
              handlesMain.popupmenuVerfahren.Value = 1;
-             handlesMain.popupmenuVerfahren.String = {''};
+            handlesMain.popupmenuVerfahren.String = {'','Skogestad','Reinisch'};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
+         elseif(anzT==1 && Tt==0) % Strecke 1 Zeitkonstanten, keine Totzeit -> kein Skogestad
+             handlesMain.popupmenuVerfahren.Value = 1;
+             handlesMain.popupmenuVerfahren.String = {'Reinisch'};
              handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'off';
          end
              
