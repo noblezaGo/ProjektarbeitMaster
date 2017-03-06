@@ -272,17 +272,17 @@ switch handles.selectedControlledSystem
     case handlesMain.textPopupmenuStrecke(1)    % PTn-Strecke
          if(anzT==2 && Tt>0)    % Strecke hat 2 Zeitkonstanten und eine Totzeit
             handlesMain.popupmenuVerfahren.Value = 1; % bevor string property neu gesetzt wird immer value property auf 1 zurücksetzen, sonst kommt warning und popupmenü wird ausgeblendet
-            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad','Reinisch'};
+            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','Chien Hrones Reswick (CHR)','Kuhn normal','Kuhn schnell','Skogestad','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
          elseif(anzT==2 && Tt==0) % 2 Zeitkonstanten, keine Totozeit -> keine Skogestad
             handlesMain.popupmenuVerfahren.Value = 1; % bevor string property neu gesetzt wird immer value property auf 1 zurücksetzen, sonst kommt warning und popupmenü wird ausgeblendet
-            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Reinisch'};
+            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','Chien Hrones Reswick (CHR)','Kuhn normal','Kuhn schnell','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
          end
          
          if(anzT==3)    % Strecke hat 3 Zeitkonstanten 
             handlesMain.popupmenuVerfahren.Value = 1; % bevor string property neu gesetzt wird immer value property auf 1 zurücksetzen, sonst kommt warning und popupmenü wird ausgeblendet
-            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Reinisch'};
+            handlesMain.popupmenuVerfahren.String = {'','Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','Chien Hrones Reswick (CHR)','Kuhn normal','Kuhn schnell','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';                     
          end
          

@@ -67,7 +67,7 @@ handles.textPopupmenuStrecke = {'PTn-Strecke','ITn-Strecke','DTn-Strecke'};
 handles.popupmenuStrecke.String = [{''},handles.textPopupmenuStrecke];
 
 %% Text Popupmenü Verfahren
-handles.textPopupmenuVerfahren = {'Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','CHR periodischer Regelverlauf','CHR aperiodischer Regelverlauf','Kuhn normal','Kuhn schnell','Skogestad','Reinisch'};
+handles.textPopupmenuVerfahren = {'Ziegler-Nichols 1. Variante','Ziegler-Nichols 2. Variante','Chien Hrones Reswick (CHR)','Kuhn normal','Kuhn schnell','Skogestad','Reinisch'};
 handles.popupmenuVerfahren.String = {''};
 
 
@@ -180,8 +180,8 @@ image(handles.axesSprungantwortClosedLoop,handles.grafikSprungantwortClosedLoop)
 axis off
 
 %% Popupmenü Überschwingweite für Reinisch
-handles.textUeberschwingweite = uicontrol('style','text','position',[260 472 120 20],'FontSize',8,'BackgroundColor','white','Visible','off','String','Überschwingweite:');
-handles.popupmenuUeberschwingweite = uicontrol('style','popupmenu','position',[400 475 100 20],'Visible','off');
+handles.textUeberschwingweite = uicontrol('style','text','position',[260 432 120 20],'FontSize',8,'BackgroundColor','white','Visible','off','String','Überschwingweite:');
+handles.popupmenuUeberschwingweite = uicontrol('style','popupmenu','position',[400 436 100 20],'Visible','off');
 
 
 %% Figure zum Plotten der Sprungantwort
@@ -347,7 +347,7 @@ switch selectedItemVerfahren
     % Wenn CHR als Verfahren gewählt wurde, stehen als Regler
     % P,PI und PID zu Verfügung
     % Default-Einstellung ist P-Regler
-    case handles.textPopupmenuVerfahren(3) % CHR periodisch
+    case handles.textPopupmenuVerfahren(3) % CHR 
         set(handles.popupmenuRegler, 'Value', 1);
         set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});        
         
@@ -359,27 +359,28 @@ switch selectedItemVerfahren
         handles.subpanelPRegler.Visible = 'on';
         
         % Popupmenü Überschwingweite ausblenden
-        handles.textUeberschwingweite.Visible = 'off';
-        handles.popupmenuUeberschwingweite.Visible = 'off';
+        handles.textUeberschwingweite.Visible = 'on';
+        handles.popupmenuUeberschwingweite.String = {'0%' '20%'};
+        handles.popupmenuUeberschwingweite.Visible = 'on';
 
         
-    case handles.textPopupmenuVerfahren(4) % CHR aperiodisch
-        set(handles.popupmenuRegler, 'Value', 1);
-        set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});        
-        
-        % Grafik der Übertragungsfunktion des P-Reglers anzeigen
-        handles.subpanelPIRegler.Visible = 'off';
-        handles.subpanelPDRegler.Visible = 'off';
-        handles.subpanelPIDRegler.Visible = 'off';
-        handles.subpanelIRegler.Visible = 'off';
-        handles.subpanelPRegler.Visible = 'on';
-        
-        % Popupmenü Überschwingweite ausblenden
-        handles.textUeberschwingweite.Visible = 'off';
-        handles.popupmenuUeberschwingweite.Visible = 'off';
+%     case handles.textPopupmenuVerfahren(4) % CHR aperiodisch
+%         set(handles.popupmenuRegler, 'Value', 1);
+%         set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});        
+%         
+%         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
+%         handles.subpanelPIRegler.Visible = 'off';
+%         handles.subpanelPDRegler.Visible = 'off';
+%         handles.subpanelPIDRegler.Visible = 'off';
+%         handles.subpanelIRegler.Visible = 'off';
+%         handles.subpanelPRegler.Visible = 'on';
+%         
+%         % Popupmenü Überschwingweite ausblenden
+%         handles.textUeberschwingweite.Visible = 'off';
+%         handles.popupmenuUeberschwingweite.Visible = 'off';
         
     
-    case handles.textPopupmenuVerfahren(5)  % Kuhn normal
+    case handles.textPopupmenuVerfahren(4)  % Kuhn normal
         set(handles.popupmenuRegler, 'Value', 1);
         set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PD-Regler','PID-Regler'});        
         
@@ -395,7 +396,7 @@ switch selectedItemVerfahren
         handles.popupmenuUeberschwingweite.Visible = 'off';
       
         % Grafik der Übertragungsfunktion des PI-Reglers anzeigen
-    case handles.textPopupmenuVerfahren(6)  % Kuhn schnell
+    case handles.textPopupmenuVerfahren(5)  % Kuhn schnell
         set(handles.popupmenuRegler, 'Value', 1);
         set(handles.popupmenuRegler, 'String', {'PI-Regler','PID-Regler'});        
         
@@ -410,7 +411,7 @@ switch selectedItemVerfahren
         handles.textUeberschwingweite.Visible = 'off';
         handles.popupmenuUeberschwingweite.Visible = 'off';
         
-    case handles.textPopupmenuVerfahren(7); % Skogestad
+    case handles.textPopupmenuVerfahren(6); % Skogestad
         
         % alle Grafiken ausblenden
         handles.subpanelPDRegler.Visible = 'off';
@@ -461,7 +462,7 @@ switch selectedItemVerfahren
                 end
         end
         
-      case handles.textPopupmenuVerfahren(8); % Reinisch
+      case handles.textPopupmenuVerfahren(7); % Reinisch
         
         % alle Grafiken ausblenden, Grafik P-Regler einblenden
         handles.subpanelPDRegler.Visible = 'off';
@@ -779,28 +780,40 @@ if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
                 [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
                 [Kr,Tn,Tv] = ziegler_nichols_2(konstanteK,Ta,Tu,selectedItemController);
                 
-            case handles.textPopupmenuVerfahren(3) % CHR periodisch
+            case handles.textPopupmenuVerfahren(3) % CHR 
                 % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
                 % zurückgegeben
-                [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
-                [Kr,Tn,Tv] = CHR_periodisch(konstanteK,Ta,Tu,selectedItemController);
                 
-           case handles.textPopupmenuVerfahren(4)   % CHR aperiodisch
-                % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
-                % zurückgegeben
+                % Eingegebene Überschwungweite auslesen
+                content = get(handles.popupmenuUeberschwingweite,'String');
+                ueberschwingweite = content{get(handles.popupmenuUeberschwingweite,'Value')};                
+                
                 [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
-                [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
+                
+                if(strcmp(ueberschwingweite,'20%')) % strcmp:Stringvergleich
+                    % CHR periodisch bei gewählten 20% Überschwingen
+                    [Kr,Tn,Tv] = CHR_periodisch(konstanteK,Ta,Tu,selectedItemController);
+                elseif(strcmp(ueberschwingweite,'0%'))
+                    % CHR aperiodisch bei gewählten 20% Überschwingen
+                    [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);
+                end
+                
+%            case handles.textPopupmenuVerfahren(4)   % CHR aperiodisch
+%                 % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
+%                 % zurückgegeben
+%                 [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
+%                 [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
 
-            case handles.textPopupmenuVerfahren(5)  % Kuhn normal
+            case handles.textPopupmenuVerfahren(4)  % Kuhn normal
                 [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
 
-            case handles.textPopupmenuVerfahren(6)  % Kuhn schnell
+            case handles.textPopupmenuVerfahren(5)  % Kuhn schnell
                 [Kr,Tn,Tv] = Kuhn_schnell(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
 
-            case handles.textPopupmenuVerfahren(7)  % Skogestad
+            case handles.textPopupmenuVerfahren(6)  % Skogestad
                 [Kr,Tn,Tv] = Skogestad(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke);
                 
-            case handles.textPopupmenuVerfahren(8) % Reinisch
+            case handles.textPopupmenuVerfahren(7) % Reinisch
                 % Eingegebene Überschwungweite auslesen
                 content = get(handles.popupmenuUeberschwingweite,'String');
                 ueberschwingweite = content{get(handles.popupmenuUeberschwingweite,'Value')};
