@@ -94,6 +94,8 @@ end
 
 
 % Umrechnung von Regler in serieller Form zu Regler in additiver Form
+% mit Koeffizientenvergleich ausgerechnet, Umrechnung gilt für PI- sowie
+% für PID-Regler
 Kr = KcController*(1+T2Controller/T1Controller);
 Tn = T1Controller+T2Controller;
 Tv = T1Controller*T2Controller/(T1Controller+T2Controller);

@@ -9,7 +9,7 @@
 % Für P-Regler: Tn,Tv == 0 an Funktion übergeben
 % Für PI-Regler: Tv == 0 an Funktion übergeben
 % Für PD-Regler: Tn == 0 an Funktion übergeben
-% Für I-Regler: Tv,Tn == 0 übergeben
+% Für I-Regler: Tv == 0 übergeben
 
 function[Gr] = transferFcnController(Kr,Tn,Tv,typeOfController)
 
@@ -37,7 +37,7 @@ switch typeOfController
         Gr = Kr*(1 + Tv*s/(1+T1*s));
         
     case 'I-Regler'
-        Gr = Kr/s;
+        Gr = Kr/(Tn*s);
         
     otherwise
         errordlg('Error in Function transferFcnController');

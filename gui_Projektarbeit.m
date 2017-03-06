@@ -181,7 +181,7 @@ axis off
 
 %% Popupmenü Überschwingweite für Reinisch
 handles.textUeberschwingweite = uicontrol('style','text','position',[260 472 120 20],'FontSize',8,'BackgroundColor','white','Visible','off','String','Überschwingweite:');
-handles.popupmenuUeberschwingweite = uicontrol('style','popupmenu','position',[400 475 100 20],'Visible','off','String',{'0%' '5%' '10%' '15%' '20%' '30%' '40%' '50%' '60%'});
+handles.popupmenuUeberschwingweite = uicontrol('style','popupmenu','position',[400 475 100 20],'Visible','off');
 
 
 %% Figure zum Plotten der Sprungantwort
@@ -501,6 +501,7 @@ switch selectedItemVerfahren
         
         % Popupmenü Überschwingweite einblenden
         handles.textUeberschwingweite.Visible = 'on';
+        handles.popupmenuUeberschwingweite.String = {'0%' '5%' '10%' '15%' '20%' '30%' '40%' '50%' '60%'};
         handles.popupmenuUeberschwingweite.Visible = 'on';
         
         

@@ -22,6 +22,7 @@ switch anzT
     otherwise 
          % Errorhandling
         errordlg('Error in Function "ziegler_nichols_1". Function cannot handle amount of given time constants');
+        return
 end
 
 % margin gibt die kritische Frequenz, bei der das System eine Phasendrehung von
@@ -36,6 +37,7 @@ if(exist('Gs','var'))
 else 
      % Errorhandling
         errordlg('Error in Function "ziegler_nichols_1". Variable Gs does not exist');
+        return
 end
         
 omegaKrit = omegaAmpR;  % Kritische Frequenz, bei der Dauerschwingungen ausgeführt werden, wenn das System mit Kkrit verstärkt wird
@@ -62,6 +64,7 @@ switch selectedController
     otherwise
         % Errorhandling
         errordlg('Error in Function "ziegler_nichols_1". Content of parameter "selectedController" is not allowed.');  
+        return
 
 
 end

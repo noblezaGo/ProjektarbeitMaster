@@ -124,10 +124,12 @@ C2 = A2+totzeitTt*A1+(totzeitTt^2)/2;
 
                     % keine Beschränkungen
 
-                    Kir = 1/(Ks*ak*C1);
-                    % I-Regler nach Reinisch: Kir/s
-                    % I-Regler hier: Kr/s -> Kir = Kr
-                    Kr = Kir;
+                   
+                    % I-Regler nach Reinisch: G=Kir/s;  Kir = 1/(Ks*ak*C1);
+                    % I-Regler in transferFcnController definiert: G=Kr/(Tn*s) 
+                    % -> Kr = 1/Ks; Tn=ak*C1
+                    Kr = 1/Ks;
+                    Tn = ak*C1;
 
                 case 'PI-Regler'
                     % zeitkonstantenTSort(1) ist größte Zeitkonstante der Strecke 
@@ -210,7 +212,7 @@ C2 = A2+totzeitTt*A1+(totzeitTt^2)/2;
                     Tdb = zeitkonstantenTSort(2);
 
                     % Umrechnung in PID-Regler additive Form
-                    Kr = Kir;
+                    Kr = Kir*(Tda+Tdb);
                     Tn = Tda+Tdb;
                     Tv = Tda*Tdb/(Tda+Tdb);
 
