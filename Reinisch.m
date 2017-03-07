@@ -5,6 +5,25 @@
 % PI-Regler nach Reinisch muss umgerechnet werden: Kr = Kir*Tn; Td=Tn
 % PID-Regler nach Reinisch ist in multiklikativer Form angegeben, muss
 % umgerechnet werden
+
+% Der Funktion müssen Streckenparameter übergeben werden
+% Ks: Verstärkung K der Strecke
+
+% zeitkonstantenT: Array, das die Streckenzeitkonstanten beinhaltet
+
+% totzeitTt: Totzeit der Strecke
+
+% streckentyp: String der den Streckentyp beinhaltet. Funktion hat 2 Streckentypen
+% implementiert. 
+% Streckentypen: 'PTn-Strecke','ITn-Strecke'
+
+% ueberschwingweite: String mit der gewünschten Überschwingweite:
+% '0%','5%','10%','15%','20%','30%','40%','50%','60%'
+
+% selectedController: Definiert den Regler, der verwendet werden soll.
+% Parameter muss vom Typ String sein. Zulässige Parameterwerte:
+% 'P-Regler', 'PI-Regler','PD-Regler oder 'PID-Regler' für PTn-Strecken
+% 'P-Regler' oder 'PD-Regler' für ITn-Strecken
 function[Kr,Tn,Tv] = Reinisch(Ks,zeitkonstantenT,totzeitTt,streckentyp,ueberschwingweite,selectedController)
 
 % Kr, Tn, Tv initialisieren mit 0
@@ -107,7 +126,7 @@ C2 = A2+totzeitTt*A1+(totzeitTt^2)/2;
                     if(V0<10)
                         % Throw Error: Verfahren nicht anwendbar für ausgewählten
                         % Regler
-                        errordlg('Verfahren nicht anwendbar für ausgewählten Regler. Kreisverstärkung V0 ist zu klein. Dominante Zeitkonstante oder Überschwingweite vergrößern.');
+                        errordlg('Verfahren nicht anwendbar für ausgewählten Regler. Kreisverstärkung V0 ist zu klein. Dominante Zeitkonstante oder Überschwingweite vergrößern.','Error','modal');
                         return
                     end
 
@@ -176,7 +195,7 @@ C2 = A2+totzeitTt*A1+(totzeitTt^2)/2;
                     if(V0<10)
                         % Throw Error: Verfahren nicht anwendbar für ausgewählten
                         % Regler
-                        errordlg('Verfahren nicht anwendbar für ausgewählten Regler. Kreisverstärkung V0 ist zu klein. Dominante Zeitkonstante oder Überschwingweite vergrößern.');
+                        errordlg('Verfahren nicht anwendbar für ausgewählten Regler. Kreisverstärkung V0 ist zu klein. Dominante Zeitkonstante oder Überschwingweite vergrößern.','Error','modal');
                         return
                     end
 

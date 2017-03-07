@@ -46,6 +46,7 @@ switch streckentyp
     otherwise 
         % Errorhandling
         errordlg('Error in Function "Skogestad". Content of parameter "streckentyp" cannot be handled by the function.');  
+        return
 end
 
 % Errorhandling wenn übergebene Parameter nicht für Skogestad Methode
@@ -54,6 +55,7 @@ end
 if(exist('strecke','var')==0)
     % Errorhandling
         errordlg('Error in function "Skogestad". Parameters Kr,Tn,Tv cannot be calculated with Skogestad method for given input parameters. Skogestad method is not applicable for given controlled system.');  
+        return
 end
 
 % Zeitkonstanten der Strecke in absteigender Größe nach sortieren
