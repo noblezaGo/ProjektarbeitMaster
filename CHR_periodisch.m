@@ -30,19 +30,19 @@ switch selectedController
         Kr = 0.7*Ta/(Ks*Tu);
         Tn = 0;
         Tv = 0;
-        disp('Chosen Controller: P');
+       
     case 'PI-Regler'
         % PI-Regler
         Kr = (0.6*Ta)/(Ks*Tu);
         Tn = Ta;
         Tv = 0;
-        disp('Chosen Controller: PI');
+        
     case 'PID-Regler'
         % PID-Regler
         Kr = (0.95*Ta)/(Ks*Tu);
         Tn = 1.35*Ta;
         Tv = 0.47*Tu;        
-        disp('Chosen Controller: PID');
+        
         
     otherwise 
         % Errorhandling

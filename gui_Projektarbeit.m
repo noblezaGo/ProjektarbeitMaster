@@ -84,7 +84,7 @@ handles.grafikUebertragungsfunktionPRegler=imread('UebertragungsfunktionPRegler'
 [heightImgPRegler,widthImgPRegler,dimImgPRegler] = size(handles.grafikUebertragungsfunktionPRegler);
 
 % Subpanel mit der Größe des Bildes des P-Reglers erstellen
-handles.subpanelPRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[220,37,widthImgPRegler,heightImgPRegler]);
+handles.subpanelPRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[220,37,widthImgPRegler,heightImgPRegler],'Visible','off');
 % Axes wird in Subpanel erstellt
 handles.axesPRegler = axes(handles.subpanelPRegler,'Units','normalized','Position',[0,0,1,1]);
 % Bild wird in Axes angezeigt
@@ -129,7 +129,7 @@ handles.grafikUebertragungsfunktionIRegler=imread('UebertragungsfunktionIRegler'
 [heightImgIRegler,widthImgIRegler,dimImgIRegler] = size(handles.grafikUebertragungsfunktionIRegler);
 
 % Subpanel mit der Größe des Bildes des I-Reglers erstellen
-handles.subpanelIRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[220,29,widthImgIRegler,heightImgIRegler],'Visible','off');
+handles.subpanelIRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[220,23,widthImgIRegler,heightImgIRegler],'Visible','off');
 % Axes wird in Subpanel erstellt
 handles.axesIRegler = axes(handles.subpanelIRegler,'Units','normalized','Position',[0,0,1,1]);
 % Bild wird in Axes angezeigt
@@ -179,7 +179,7 @@ handles.axesSprungantwortClosedLoop = axes(handles.subpanelSprungantwortClosedLo
 image(handles.axesSprungantwortClosedLoop,handles.grafikSprungantwortClosedLoop);
 axis off
 
-%% Popupmenü Überschwingweite für Reinisch
+%% Popupmenü Überschwingweite für Reinisch und CHR
 handles.textUeberschwingweite = uicontrol('style','text','position',[260 432 120 20],'FontSize',8,'BackgroundColor','white','Visible','off','String','Überschwingweite:');
 handles.popupmenuUeberschwingweite = uicontrol('style','popupmenu','position',[400 436 100 20],'Visible','off');
 
@@ -266,8 +266,8 @@ function pushbuttonStreckenparameter_Callback(hObject, eventdata, handles)
 % Streckenparameter übergeben
 
 % Wenn figure "figStreckenparameter" in den handles existiert, wird das Fenster zur Eingabe der Streckenparameter sichtbar
-% gemacht. "figStreckenparameter" wird beim Drücken des Übernehmen
-% Pushbuttons zu den handles der mainfigure hinzugefügt.
+% gemacht. "figStreckenparameter" wird beim Drücken des "Übernehmen"-
+% Pushbuttons im Streckeneingabefenster zu den handles der mainfigure hinzugefügt.
 if(isfield(handles,'figStreckenparameter'))
     handles.figStreckenparameter.Visible = 'on';
     
@@ -362,22 +362,6 @@ switch selectedItemVerfahren
         handles.textUeberschwingweite.Visible = 'on';
         handles.popupmenuUeberschwingweite.String = {'0%' '20%'};
         handles.popupmenuUeberschwingweite.Visible = 'on';
-
-        
-%     case handles.textPopupmenuVerfahren(4) % CHR aperiodisch
-%         set(handles.popupmenuRegler, 'Value', 1);
-%         set(handles.popupmenuRegler, 'String', {'P-Regler','PI-Regler','PID-Regler'});        
-%         
-%         % Grafik der Übertragungsfunktion des P-Reglers anzeigen
-%         handles.subpanelPIRegler.Visible = 'off';
-%         handles.subpanelPDRegler.Visible = 'off';
-%         handles.subpanelPIDRegler.Visible = 'off';
-%         handles.subpanelIRegler.Visible = 'off';
-%         handles.subpanelPRegler.Visible = 'on';
-%         
-%         % Popupmenü Überschwingweite ausblenden
-%         handles.textUeberschwingweite.Visible = 'off';
-%         handles.popupmenuUeberschwingweite.Visible = 'off';
         
     
     case handles.textPopupmenuVerfahren(4)  % Kuhn normal
@@ -503,10 +487,8 @@ switch selectedItemVerfahren
         % Popupmenü Überschwingweite einblenden
         handles.textUeberschwingweite.Visible = 'on';
         handles.popupmenuUeberschwingweite.String = {'0%' '5%' '10%' '15%' '20%' '30%' '40%' '50%' '60%'};
-        handles.popupmenuUeberschwingweite.Visible = 'on';
-        
-        
-            
+        handles.popupmenuUeberschwingweite.Visible = 'on';      
+                    
             
 end
         
@@ -710,7 +692,8 @@ function startbutton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-%% Zuweisung der Streckenparameter der gui_Strecke
+%% Zuweisung der Streckenparameter, die in den handles gespeichert sind
+% Streckenparameter werden in "gui_Strecke" den handles zugewiesen
 if(isfield(handles,'konstanteK'))
     konstanteK = handles.konstanteK;
 else
@@ -796,13 +779,7 @@ if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
                 elseif(strcmp(ueberschwingweite,'0%'))
                     % CHR aperiodisch bei gewählten 20% Überschwingen
                     [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);
-                end
-                
-%            case handles.textPopupmenuVerfahren(4)   % CHR aperiodisch
-%                 % Call der Funktion Bestimmung_Wendetangente -> Tu und Ta werden
-%                 % zurückgegeben
-%                 [Tu,Ta] = Bestimmung_Wendetangente_numerisch(konstanteK,zeitkonstantenT,totzeitTt,simulationStopTime);
-%                 [Kr,Tn,Tv] = CHR_aperiodisch(konstanteK,Ta,Tu,selectedItemController);     
+                end                    
 
             case handles.textPopupmenuVerfahren(4)  % Kuhn normal
                 [Kr,Tn,Tv] = Kuhn_normal(konstanteK,zeitkonstantenT,totzeitTt,selectedItemController);
@@ -821,10 +798,6 @@ if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
         end
     end
 
-    % Ausgabe der berechneten Reglerparameter P,I,D
-%     set(handles.TextCalculatedP, 'String',['K = ' num2str(Kr)]);
-%     set(handles.TextCalculatedI, 'String',['Tn = ' num2str(Tn)]);
-%     set(handles.TextCalculatedD, 'String',['Tv = ' num2str(Tv)]);
 
     %% Bestimmung der Übertragungsfunktion Gr des Reglers
     Gr = transferFcnController(Kr,Tn,Tv,selectedItemController);
@@ -864,26 +837,20 @@ end
 
 % Plot der Sprungantwort in Axes1
 axes(handles.axes1);
-%systemLegend = ['System' num2str(handles.AnzahlStartButtonPushed)];
 
-
-%systemlegend = ['System1'; 'System2'];
 hold all;
+
+%Simulationszeit vorgeben
 simulationTime = simulationStartTime : 0.01 : simulationStopTime;
-% [y,t] = step(transferFunctionSystemTotal(konstanteK,zeitkonstanteT1,zeitkonstanteT2,Kr,Tn,Tv,totzeitTt),simulationTime);
+
+% y-Werte berechnen über vorgegebener Sumilationszeit
 [y,t] = step(Gtot,simulationTime);
+
+% Sprungantwort plotten
 plot(t,y, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
 
 legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
 
-
-% systemlegend = [];
-% for i= 1:handles.AnzahlStartButtonPushed
-%     legendNumber(i,1) = i;
-% end
-
-
-% legend(num2str(systemlegend));
 
 
 guidata(hObject,handles)

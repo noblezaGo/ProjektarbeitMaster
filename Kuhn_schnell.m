@@ -41,6 +41,7 @@ switch selectedController
     otherwise 
         % Errorhandling
         errordlg('Error in Function "Kuhn_schnell". Content of parameter "selectedController" is not allowed.');  
+        return
 end
 
 end

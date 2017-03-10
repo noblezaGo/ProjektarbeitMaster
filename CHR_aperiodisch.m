@@ -29,21 +29,21 @@ switch selectedController
         Kr = 0.3*Ta/(Ks*Tu);
         Tn = 0;
         Tv = 0;
-        disp('Chosen Controller: P');
+        
     case 'PI-Regler'
         % PI-Regler
         Kr = (0.35*Ta)/(Ks*Tu);
         Tn = 1.2*Ta;
         Tv = 0;
-        disp('Chosen Controller: PI');
+        
     case 'PID-Regler'
         % PID-Regler
         Kr = (0.6*Ta)/(Ks*Tu);
         Tn = Ta;
-        Tv = 0.5*Tu;        
-        disp('Chosen Controller: PID');
+        Tv = 0.5*Tu;      
         
     otherwise 
         % Errorhandling
-        errordlg('Error in Function "CHR_aperiodisch". Content of parameter "selectedController" is not allowed.');  
+        errordlg('Error in Function "CHR_aperiodisch". Content of parameter "selectedController" is not allowed.'); 
+        return
 end

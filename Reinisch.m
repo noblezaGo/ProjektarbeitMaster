@@ -134,7 +134,6 @@ C2 = A2+totzeitTt*A1+(totzeitTt^2)/2;
                         Kr = zeitkonstantenTSort(1)/(Ks*ak*C1Strich);
 
 
-
                 case 'I-Regler'                             
 
                     gamma = C2/C1^2;

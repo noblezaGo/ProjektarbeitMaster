@@ -9,8 +9,7 @@
 % zeitkonstantenT: Array, das die Streckenzeitkonstanten beinhaltet
 % totzeitTt: Totzeit der Strecke
 % streckentyp: String der den Streckentyp beinhaltet. Funktion hat 2 Streckentypen
-% implementiert. 
-% Streckentypen: 'PTn-Strecke','ITn-Strecke'
+% implementiert. Streckentypen: 'PTn-Strecke','ITn-Strecke'
 function[Kr,Tn,Tv]= Skogestad(Ks,zeitkonstantenT,totzeitTt,streckentyp)
 
 % Tc von Skogestad wird gleich der Totzeit angenommen
@@ -28,18 +27,16 @@ switch streckentyp
             strecke = 'PT1MitTotzeit';           
         
         elseif(totzeitTt~=0 && anzT==2)
-            strecke = 'PT2MitTotzeit';
-            
+            strecke = 'PT2MitTotzeit';            
          end
-        
-    
+           
 
     case 'ITn-Strecke'
         if(totzeitTt~=0 && anzT==0)
             strecke = 'IMitTotzeit';        
         
         elseif(totzeitTt~=0 && anzT==1)
-            strecke = 'IT1MitTotzeit';            
+            strecke = 'IT1MitTotzeit';       
         
         end
         
@@ -87,13 +84,13 @@ switch strecke
         T1Controller = 4*(Tc+totzeitTt);
         T2Controller = Tsort(1);
         
-end
+    otherwise 
+        % Errorhandling
+        errordlg('Error in Function "Skogestad". Content of parameter "streckentyp" cannot be handled by the function.');  
+        return
         
+end      
    
-            
-
-
-
 
 % Umrechnung von Regler in serieller Form zu Regler in additiver Form
 % mit Koeffizientenvergleich ausgerechnet, Umrechnung gilt für PI- sowie

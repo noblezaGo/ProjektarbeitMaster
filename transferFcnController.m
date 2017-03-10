@@ -6,10 +6,10 @@
 % typeOfController:
 % 'P-Regler','PI-Regler','I-Regler','PD-Regler','PID-Regler'
 
-% Für P-Regler: Tn,Tv == 0 an Funktion übergeben
-% Für PI-Regler: Tv == 0 an Funktion übergeben
-% Für PD-Regler: Tn == 0 an Funktion übergeben
-% Für I-Regler: Tv == 0 übergeben
+% Für P-Regler: Tn,Tv = 0 an Funktion übergeben
+% Für PI-Regler: Tv = 0 an Funktion übergeben
+% Für PD-Regler: Tn = 0 an Funktion übergeben
+% Für I-Regler: Tv = 0 übergeben
 
 function[Gr] = transferFcnController(Kr,Tn,Tv,typeOfController)
 
@@ -23,43 +23,38 @@ switch typeOfController
     case 'PI-Regler'
         if(Tn>0)
             Gr = Kr*(1 + 1/(Tn*s));
+        else
+            errordlg('Error in Function transferFcnController');
+            return
         end
         
     case 'PID-Regler'
-        if(Tn>0)
-            % TO DO: idealer oder realer PID?
-            T1 = 0.1; % Zeitkonstante des Tiefpasses im D-Anteil
-            Gr = Kr*(1 + 1/(Tn*s) + Tv*s/(1+T1*s));
+        if(Tn>0)            
+            Gr = Kr*(1 + 1/(Tn*s) + Tv*s);
+        else
+            errordlg('Error in Function transferFcnController');
+            return
         end
         
-    case 'PD-Regler'
-        T1 = 0.1; % Zeitkonstante des Tiefpasses im D-Anteil
-        Gr = Kr*(1 + Tv*s/(1+T1*s));
+    case 'PD-Regler'       
+        Gr = Kr*(1 + Tv*s);
         
     case 'I-Regler'
-        Gr = Kr/(Tn*s);
+        if(Tn>0)
+            Gr = Kr/(Tn*s);
+        else
+            errordlg('Error in Function transferFcnController');
+            return
+        end
         
     otherwise
         errordlg('Error in Function transferFcnController');
+        return
 end
 
-if(exist('Gr','var')==0)
-    errordlg('Error in Function transferFcnController. Failed to calculate controller.');
-end
+    if(exist('Gr','var')==0)
+        errordlg('Error in Function transferFcnController. Failed to calculate controller.');
+        return
+    end
 
-% % P-Anteil des Reglers
-% pAnteil = Kr;   
-% 
-% % I-Anteil des Reglers
-% if(Tn==0)               % Bei Wahl des P-Reglers ist Tn==0. Mit if-Abfrage Fehler abfangen, der bei Tn==0 ausgelöst wird.   
-%     iAnteil = 0;        % iAnteil muss 0 gesetzt werden, da Tn im Nenner steht
-% else
-%     iAnteil = Kr/(Tn*s); 
-% end
-% 
-% % D-Anteil des Reglers
-% dAnteil = Kr*Tv*s/(1+T1*s);
-% 
-% % Übertragungsfunktion Regler, Standardform
-% Gr = pAnteil + iAnteil + dAnteil;
 end
