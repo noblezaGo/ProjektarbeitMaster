@@ -129,7 +129,7 @@ handles.grafikUebertragungsfunktionIRegler=imread('UebertragungsfunktionIRegler'
 [heightImgIRegler,widthImgIRegler,dimImgIRegler] = size(handles.grafikUebertragungsfunktionIRegler);
 
 % Subpanel mit der Größe des Bildes des I-Reglers erstellen
-handles.subpanelIRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[220,23,widthImgIRegler,heightImgIRegler],'Visible','off');
+handles.subpanelIRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[220,21,widthImgIRegler,heightImgIRegler],'Visible','off');
 % Axes wird in Subpanel erstellt
 handles.axesIRegler = axes(handles.subpanelIRegler,'Units','normalized','Position',[0,0,1,1]);
 % Bild wird in Axes angezeigt
@@ -159,7 +159,7 @@ handles.grafikSprungantwortStrecke = imread('SprungantwortStrecke','png');    % 
 [heightImgSprungantwortStrecke,widthImgSprungantwortStrecke,dimImgSprungantwortStrecke] = size(handles.grafikSprungantwortStrecke);
 
 % Axes wird in Subpanel erstellt
-handles.subpanelSprungantwortStrecke = uipanel(handles.buttongroupPlot,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[263,21,widthImgSprungantwortStrecke,heightImgSprungantwortStrecke],'Visible','on');
+handles.subpanelSprungantwortStrecke = uipanel(handles.buttongroupPlot,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[280,21,widthImgSprungantwortStrecke,heightImgSprungantwortStrecke],'Visible','on');
 % Bild wird in Axes angezeigt
 handles.axesSprungantwortStrecke = axes(handles.subpanelSprungantwortStrecke,'Units','normalized','Position',[0,0,1,1]);
 image(handles.axesSprungantwortStrecke,handles.grafikSprungantwortStrecke);
@@ -173,7 +173,7 @@ handles.grafikSprungantwortClosedLoop = imread('SprungantwortClosedLoop','png');
 [heightImgSprungantwortClosedLoop,widthImgSprungantwortClosedLoop,dimImgSprungantwortClosedLoop] = size(handles.grafikSprungantwortClosedLoop);
 
 % Axes wird in Subpanel erstellt
-handles.subpanelSprungantwortClosedLoop = uipanel(handles.buttongroupPlot,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[263,16,widthImgSprungantwortClosedLoop,heightImgSprungantwortClosedLoop],'Visible','off');
+handles.subpanelSprungantwortClosedLoop = uipanel(handles.buttongroupPlot,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[250,16,widthImgSprungantwortClosedLoop,heightImgSprungantwortClosedLoop],'Visible','off');
 % Bild wird in Axes angezeigt
 handles.axesSprungantwortClosedLoop = axes(handles.subpanelSprungantwortClosedLoop,'Units','normalized','Position',[0,0,1,1]);
 image(handles.axesSprungantwortClosedLoop,handles.grafikSprungantwortClosedLoop);
@@ -359,8 +359,9 @@ switch selectedItemVerfahren
         handles.subpanelPRegler.Visible = 'on';
         
         % Popupmenü Überschwingweite ausblenden
-        handles.textUeberschwingweite.Visible = 'on';
+        handles.popupmenuUeberschwingweite.Value = 1; % default geben
         handles.popupmenuUeberschwingweite.String = {'0%' '20%'};
+        handles.textUeberschwingweite.Visible = 'on';
         handles.popupmenuUeberschwingweite.Visible = 'on';
         
     
@@ -485,8 +486,9 @@ switch selectedItemVerfahren
         end
         
         % Popupmenü Überschwingweite einblenden
-        handles.textUeberschwingweite.Visible = 'on';
+        handles.popupmenuUeberschwingweite.Value = 1;   % default geben
         handles.popupmenuUeberschwingweite.String = {'0%' '5%' '10%' '15%' '20%' '30%' '40%' '50%' '60%'};
+        handles.textUeberschwingweite.Visible = 'on';
         handles.popupmenuUeberschwingweite.Visible = 'on';      
                     
             
@@ -847,7 +849,8 @@ simulationTime = simulationStartTime : 0.01 : simulationStopTime;
 [y,t] = step(Gtot,simulationTime);
 
 % Sprungantwort plotten
-plot(t,y, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
+% plot(t,y, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
+plot(t,y, 'DisplayName', selectedItemVerfahren);
 
 legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
 
