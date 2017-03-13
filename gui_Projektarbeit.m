@@ -728,7 +728,6 @@ if(isempty(selectedItemStrecke))
     return
 end
 
-
 % Eingegebenes Verfahren auslesen
 contentPopupmenuVerfahren = get(handles.popupmenuVerfahren,'String');
 selectedItemVerfahren = contentPopupmenuVerfahren{get(handles.popupmenuVerfahren,'Value')};
@@ -743,9 +742,10 @@ simulationStopTime = str2double(get(handles.editSimulationStopTime,'String'));
 
 % Art des Plottes auslesen
 stateRadiobuttonPlotClosedLoop = get(handles.radiobuttonPlotStepClosedLoop,'Value');
+stateRadiobuttonPlotControlledSystem = get(handles.radiobuttonPlotStepControlledSystem,'Value');
 
 %% Abfrage, ob die Sprungantwort der Strecke oder des geschlossenen geregelten Kreises geplottet werden soll
-if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
+if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot" auf "Sprungantwort geschlossener Regelkreis" eingestellt
     %% Bestimmung der Reglerparameter Kr,Tn,Tv
     % geschlossener Regelkreis wurde ausgewählt
     % Bestimmung der Regelparameter KR,Tn,Tv nach dem ausgewählten Verfahren
@@ -804,23 +804,60 @@ if(stateRadiobuttonPlotClosedLoop) % Radiobutton im Panel "Plot"
     %% Bestimmung der Übertragungsfunktion Gr des Reglers
     Gr = transferFcnController(Kr,Tn,Tv,selectedItemController);
 
-
-
     %% Bestimmung der Übertragungsfunktion Gs der Strecke
     Gs = transferFcnControlledSystem(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke);
 
     %% Bestimmung der Übertragungsfunktion des geschlossenen Regelkreises
-    Gtot = Gr*Gs/(1+Gr*Gs);
+    Gtot = Gr*Gs/(1+Gr*Gs);    
+    
+    %% Erstellung des Plots, Sprungantwort geschlossener Regelkreis
+    % Plot der Sprungantwort in Axes1
+    axes(handles.axes1);
 
-else
+    hold all;
+    
+    %Simulationszeit vorgeben
+    simulationTime = simulationStartTime : 0.01 : simulationStopTime;
+
+    % y-Werte berechnen über vorgegebener Sumilationszeit
+    [y,t] = step(Gtot,simulationTime);
+
+    % Sprungantwort plotten
+    % als Name erscheint das gewählte Entwurfsverfahren in der Legende
+    plot(t,y, 'DisplayName', selectedItemVerfahren);
+
+    legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
+   
+
+elseif(stateRadiobuttonPlotControlledSystem) % Radiobutton auf "Sprungantwort Regelstrecke" eingestellt
     %% Sprungantwort der Strecke soll geplottet werden
     % Bestimmung der Übertragungsfunktion Gs der Strecke
     Gs = transferFcnControlledSystem(konstanteK,zeitkonstantenT,totzeitTt,selectedItemStrecke);
     % Gesamtübertragungsfunktion Gtot wird geplottet, Gs wird Gtot
     % zugewiesenen
     Gtot = Gs;
+    
+     %% Erstellung des Plots, Sprungantwort Regelstrecke
+    % Plot der Sprungantwort in Axes1
+    axes(handles.axes1);
 
+    hold all;
 
+    %Simulationszeit vorgeben
+    simulationTime = simulationStartTime : 0.01 : simulationStopTime;
+
+    % y-Werte berechnen über vorgegebener Sumilationszeit
+    [y,t] = step(Gtot,simulationTime);
+
+    % Sprungantwort plotten
+    % In der Legende erscheint als Name der ausgewählte Streckentyp
+    plot(t,y, 'DisplayName', selectedItemStrecke);
+
+    legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
+    
+else
+    % Errorhandling
+    errordlg('Fehler bei Auslesen der Radiobuttons im Feld "Plot"','Error','modal');
 end
 
 
@@ -830,29 +867,29 @@ end
 
 % Abrage, wie oft der Start-Button gedrückt wurde, um Anzahl an Plots in
 % der figure bestimmen zu können-> nötig für 'legend'
-if(isfield(handles,'AnzahlStartButtonPushed')) 
-    handles.AnzahlStartButtonPushed = handles.AnzahlStartButtonPushed + 1;
-else 
-    handles.AnzahlStartButtonPushed = 1;
-end 
-
-
-% Plot der Sprungantwort in Axes1
-axes(handles.axes1);
-
-hold all;
-
-%Simulationszeit vorgeben
-simulationTime = simulationStartTime : 0.01 : simulationStopTime;
-
-% y-Werte berechnen über vorgegebener Sumilationszeit
-[y,t] = step(Gtot,simulationTime);
-
-% Sprungantwort plotten
-% plot(t,y, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
-plot(t,y, 'DisplayName', selectedItemVerfahren);
-
-legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
+% if(isfield(handles,'AnzahlStartButtonPushed')) 
+%     handles.AnzahlStartButtonPushed = handles.AnzahlStartButtonPushed + 1;
+% else 
+%     handles.AnzahlStartButtonPushed = 1;
+% end 
+% 
+% 
+% % Plot der Sprungantwort in Axes1
+% axes(handles.axes1);
+% 
+% hold all;
+% 
+% %Simulationszeit vorgeben
+% simulationTime = simulationStartTime : 0.01 : simulationStopTime;
+% 
+% % y-Werte berechnen über vorgegebener Sumilationszeit
+% [y,t] = step(Gtot,simulationTime);
+% 
+% % Sprungantwort plotten
+% % plot(t,y, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
+% plot(t,y, 'DisplayName', selectedItemVerfahren);
+% 
+% legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
 
 
 
