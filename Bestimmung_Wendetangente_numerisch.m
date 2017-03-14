@@ -1,9 +1,11 @@
 % Bestimmung Wendetangente numerisch
+
 % Funktionsargument:
 % K: Streckenverstärkung
 % zeitkonstantenT: Streckenzeitkonstanten als Vektor, max. 3
 % totzeitTt: Totzeit der Strecke
 % simulationTime: Zeitvektor, über den simuliert wird
+
 function [Tu,Ta] =  Bestimmung_Wendetangente_numerisch(K,zeitkonstantenT,totzeitTt,simulationTime)
 
 %% Sprungsantwort im Laplace-Bereich berechnen
@@ -76,7 +78,6 @@ Tu = -cWT/dWP;
 
 % Zeit Ta bzw Tg
 Ta = K/dWP;
-%Tg = SPK - Tu;
 
 
 end

@@ -1,4 +1,5 @@
 % Bestimmung der Übertragungsfunktion des Reglers
+
 % Funktion erstellt einen Regler aus den Parametern Kr,Tn,Tv
 % Kr: Reglerverstärkung
 % Tn: Nachstellsteit

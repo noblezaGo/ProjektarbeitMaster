@@ -1,6 +1,6 @@
 % Reglereinstellung nach Ziegler-Nichols-Verfahren 2. Möglichkeit
 
-% Funktion gibt Reglerparameter Kr,Tn,Tv für PID-Regler zurück
+% Funktion gibt Reglerparameter Kr,Tn,Tv zurück
 % Kr: Reglerverstärkung
 % Tn: Nachstellzeit
 % Tv: Vorhaltezeit
@@ -24,20 +24,17 @@
 function[Kr,Tn,Tv] = ziegler_nichols_2(Ks,Ta,Tu,selectedController)
 % selectedController enthält den über das Popup-Menü ausgewählten Regler
 switch selectedController
-    case 'P-Regler'
-        % P-Regler
+    case 'P-Regler'        
         Kr = Ta/(Ks*Tu);
         Tn = 0;
         Tv = 0;
         
-    case 'PI-Regler'
-        % PI-Regler
+    case 'PI-Regler'        
         Kr = (0.9*Ta)/(Ks*Tu);
         Tn = 3.33*Tu;
         Tv = 0;
         
-    case 'PID-Regler'
-        % PID-Regler
+    case 'PID-Regler'        
         Kr = (1.2*Ta)/(Ks*Tu);
         Tn = 2*Tu;
         Tv = 0.5*Tu;        

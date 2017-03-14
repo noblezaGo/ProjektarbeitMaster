@@ -858,40 +858,8 @@ elseif(stateRadiobuttonPlotControlledSystem) % Radiobutton auf "Sprungantwort Re
 else
     % Errorhandling
     errordlg('Fehler bei Auslesen der Radiobuttons im Feld "Plot"','Error','modal');
-end
-
-
+end  
     
-    
-%% Erstellung des Plots 
-
-% Abrage, wie oft der Start-Button gedrückt wurde, um Anzahl an Plots in
-% der figure bestimmen zu können-> nötig für 'legend'
-% if(isfield(handles,'AnzahlStartButtonPushed')) 
-%     handles.AnzahlStartButtonPushed = handles.AnzahlStartButtonPushed + 1;
-% else 
-%     handles.AnzahlStartButtonPushed = 1;
-% end 
-% 
-% 
-% % Plot der Sprungantwort in Axes1
-% axes(handles.axes1);
-% 
-% hold all;
-% 
-% %Simulationszeit vorgeben
-% simulationTime = simulationStartTime : 0.01 : simulationStopTime;
-% 
-% % y-Werte berechnen über vorgegebener Sumilationszeit
-% [y,t] = step(Gtot,simulationTime);
-% 
-% % Sprungantwort plotten
-% % plot(t,y, 'DisplayName', ['System ' num2str(handles.AnzahlStartButtonPushed)]);
-% plot(t,y, 'DisplayName', selectedItemVerfahren);
-% 
-% legend('-DynamicLegend'); % undokumentierte Matlab-Funktion-> erstellt Legende dynamisch in Abhängigkeit von Anzahl Plots
-
-
 
 guidata(hObject,handles)
 end

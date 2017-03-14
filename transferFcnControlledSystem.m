@@ -1,10 +1,14 @@
 % Bestimmung der Übertragungsfunktion Gs der Strecke
 
 % konstanteK: Verstärkung K der Strecke
+
 % zeitkonstantenT: Array mit den Zeitkonstanten der Strecke
+
 % totzeitTt: Totzeit der Strecke
+
 % typeofControlledSystem: String der den Streckentyp beinhaltet. Funktion hat 3 Streckentypen
 % implementiert. Streckentypen: 'PTn-Strecke','ITn-Strecke','DTn-Strecke'
+
 function[Gs] = transferFcnControlledSystem(konstanteK,zeitkonstantenT,totzeitTt,typeOfControlledSystem)
 
 s = tf('s');

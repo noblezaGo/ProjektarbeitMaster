@@ -3,6 +3,17 @@
 % es wird untersucht bei welcher Reglerverstärkung KrKrit das System
 % Dauerschwingungen mit der Frequenz omegaKrit ausführt
 
+% Der Funktion müssen Streckenparameter übergeben werden
+% Ks: Verstärkung K der Strecke
+
+% zeitkonstantenT: Array, das die Streckenzeitkonstanten beinhaltet
+
+% totzeitTt: Totzeit der Strecke
+
+% selectedController: Definiert den Regler, der verwendet werden soll.
+% Parameter muss vom Typ String sein. Zulässige Parameterwerte:
+% 'P-Regler', 'PI-Regler' oder 'PID-Regler'
+
 function[Kr,Tn,Tv] = ziegler_nichols_1(Ks,zeitkonstantenT,totzeitTt,selectedController)
 
 s = tf('s');

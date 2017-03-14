@@ -95,13 +95,6 @@ handles.buttonApply = uicontrol('style','pushbutton','position',[275 50 100 30],
 % figure "figStreckenparameter" (GUI-Fenster für Streckenparameter) enthält nun die handles Struktur
 guidata(handles.figStreckenparameter,handles);
 
-% Der handles Struktur der mainfigure (GUI der Hauptfensters) hObjectMain wird die figure "figStreckenparameter"
-% hinzugefügt. Über die Struktur der mainfigure kann nun auf
-% "figStreckenparameter zugegriffen werden.
-% handlesMain.figStrecke = handles.figStreckenparameter;
-% disp(handlesMain);
-% guidata(handles.hObjectMain,handlesMain);
-% guidata(handles.hObjectMain);
 
 end
 

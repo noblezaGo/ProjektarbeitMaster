@@ -1,0 +1,4 @@
+Applikation ausführen:
+
+1) Ordner "MATLAB files" mit allen .m-Files und .png-Dateien in MATLAB als MATLAB-Pfad einstellen
+2) gui_Projektarbeit.m in MATLAB öffnen und ausführen
