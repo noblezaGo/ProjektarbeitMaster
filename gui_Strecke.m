@@ -19,7 +19,7 @@ handlesMain = guidata(handles.hObjectMain);
 contentPopupmenuStrecke = get(handlesMain.popupmenuStrecke,'String');
 handles.selectedControlledSystem = contentPopupmenuStrecke{get(handlesMain.popupmenuStrecke,'Value')};
 
-
+% Grafiken anzeigen zu dem gewählten Streckentyp
 switch handles.selectedControlledSystem
     case 'PTn-Strecke'
         grafikUebertragungsfunktionStrecke=imread('UebertragungsfunktionPTnStrecke','png'); 
@@ -64,7 +64,25 @@ end
 %% Erstellung der Eingabe- und Textfelder
 % Popupmenü Anzahl Zeitkonstanten
 handles.textPopupmenuAnzahlT = uicontrol('style','text','position',[50 300 50 20],'FontSize',10,'BackgroundColor','white','String','n =');
-handles.popupmenuAnzahlT = uicontrol('style','popupmenu','position',[100 300 100 20],'String',{'0' '1' '2' '3'},'Callback',@popupmenu_AnzT_Callback);
+
+% Unterscheidung ob PTn,ITn oder DTn-Strecke
+% PTn oder ITn Strecke kann 0,1,2,3 Zeitkonstanten besitzen
+% DTn kann 1,2,3 Zeitkonstanten besitzen
+if(strcmp(handles.selectedControlledSystem,'PTn-Strecke') || strcmp(handles.selectedControlledSystem,'ITn-Strecke'))
+    handles.popupmenuAnzahlT = uicontrol('style','popupmenu','position',[100 300 100 20],'String',{'0' '1' '2' '3'},'Callback',@popupmenu_AnzT_Callback);
+    
+    % Eingabe Zeitkonstante T1, wird unsichtbar erstellt
+    handles.textT1 = uicontrol('style','text','position',[50 180 50 20],'Visible','off','FontSize',10,'BackgroundColor','white','String','T1 =');
+    handles.editT1 = uicontrol('style','edit','position',[100 180 100 20],'Visible','off');
+
+ % DTn Strecke muss mind. 1 Zeitkonstante besitzen
+elseif(strcmp(handles.selectedControlledSystem,'DTn-Strecke'))
+    handles.popupmenuAnzahlT = uicontrol('style','popupmenu','position',[100 300 100 20],'String',{'1' '2' '3'},'Callback',@popupmenu_AnzT_Callback);
+    
+     % Eingabe Zeitkonstante T1, wird sichtbar erstellt
+    handles.textT1 = uicontrol('style','text','position',[50 180 50 20],'Visible','on','FontSize',10,'BackgroundColor','white','String','T1 =');
+    handles.editT1 = uicontrol('style','edit','position',[100 180 100 20],'Visible','on');
+end
 
 % Eingabe K
 handles.textK = uicontrol('style','text','position',[50 260 50 20],'FontSize',10,'BackgroundColor','white','String','K =');
@@ -74,9 +92,6 @@ handles.editK = uicontrol('style','edit','position',[100 260 100 20]);
 handles.textTt = uicontrol('style','text','position',[50 220 50 20],'FontSize',10,'BackgroundColor','white','String','Tt =');
 handles.editTt = uicontrol('style','edit','position',[100 220 100 20]);
 
-% Eingabe Zeitkonstante T1
-handles.textT1 = uicontrol('style','text','position',[50 180 50 20],'Visible','off','FontSize',10,'BackgroundColor','white','String','T1 =');
-handles.editT1 = uicontrol('style','edit','position',[100 180 100 20],'Visible','off');
 
 % Eingabe Zeitkonstante T2, wird unsichtbar erstellt
 handles.textT2 = uicontrol('style','text','position',[50 140 50 20],'Visible','off','FontSize',10,'BackgroundColor','white','String','T2 =');
@@ -113,11 +128,11 @@ function popupmenu_AnzT_Callback(hObject,eventdata)
 % definieren und dann hier handles = guidata(handles.fig);
 handles = guidata(hObject);
 content = get(hObject,'String');
-handles.anzahlT = content{get(hObject,'Value')};
+anzahlT = content{get(hObject,'Value')};
   
 
 %% Abhängig von eingestellter Anzahl an Zeitkonstanten im Popupmenü werden die Eingabefelder der Zeitkonstanten ein- oder ausgeblendet
-switch handles.anzahlT
+switch anzahlT
     case '0'
         % T1,T2 und T3 ausblenden
         handles.textT1.Visible = 'off';
@@ -192,7 +207,7 @@ konstK = str2double(get(handles.editK,'String'));
 if(isnan(konstK)==0 && konstK>0)
     handlesMain.konstanteK = konstK;
 else 
-    errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
+    errordlg('Ungültiger Eingabewert für K. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
     return
 end
 
@@ -201,19 +216,19 @@ Tt = str2double(get(handles.editTt,'String'));
 if(isnan(Tt)==0 && Tt>=0)
     handlesMain.totzeitTt = Tt;
 else
-    errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Zahlen einschließlich Null');
+    errordlg('Ungültiger Eingabewert für Tt. Gültige Eingabewerte sind positive Zahlen einschließlich Null');
     return
 end
     
 
 % Zeitkonstanten einlesen
-handlesMain.zeitkonstantenT = [];
-% Im Popupmenü "Anzahl Zeitkonstanten" ist als default "0" eingestellt. Wenn
-% Benutzer nicht in Popupmenü reinklickt wird Callback nicht ausgeführt und
-% handles.anzahlT existiert nicht. Mit isfield prüfen ob anzahlT im handles
-% struct existiert
-if(isfield(handles,'anzahlT'))    
-    switch handles.anzahlT
+
+content = get(handles.popupmenuAnzahlT,'String');
+anzahlT = content{get(handles.popupmenuAnzahlT,'Value')};
+    
+    switch anzahlT
+        case '0'
+            handlesMain.zeitkonstantenT = [];        
         case '1'
             T1 = str2double(get(handles.editT1,'String'));
             % T1 ist eine Zahl und größer als Null
@@ -223,7 +238,7 @@ if(isfield(handles,'anzahlT'))
                 % Fehlerdialogbox wird bei unzulässigem Eingabewert angezeigt.
                 % Return unterbricht die Callback Funktion. Der Benutzer hat
                 % die Möglichkeit neu einzugeben.
-                errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Fließkommazahlen. Null ist unzulässig.');
+                errordlg('Ungültiger Eingabewert für T1. Gültige Eingabewerte sind positive Fließkommazahlen. Null ist unzulässig.');
                 return
             end
 
@@ -234,7 +249,7 @@ if(isfield(handles,'anzahlT'))
                 handlesMain.zeitkonstantenT(1) = T1;
                 handlesMain.zeitkonstantenT(2) = T2;
             else
-                errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
+                errordlg('Ungültiger Eingabewert für T1 oder T2. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
                 return
             end
 
@@ -247,13 +262,13 @@ if(isfield(handles,'anzahlT'))
                 handlesMain.zeitkonstantenT(2) = T2;
                 handlesMain.zeitkonstantenT(3) = T3;
             else
-                errordlg('Ungültiger Eingabewert. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
+                errordlg('Ungültiger Eingabewert für T1, T2 oder T3. Gültige Eingabewerte sind positive Zahlen. Null ist unzulässig.');
                 return
             end       
 
     end
 
-end
+
 
 
 %% Entscheidung, welches Entwurfsverfahren für die gewählte Strecke in Frage kommt
