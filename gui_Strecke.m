@@ -222,7 +222,7 @@ end
     
 
 % Zeitkonstanten einlesen
-
+handlesMain.zeitkonstantenT = []; 
 content = get(handles.popupmenuAnzahlT,'String');
 anzahlT = content{get(handles.popupmenuAnzahlT,'Value')};
     
@@ -299,10 +299,10 @@ switch handles.selectedControlledSystem
             handlesMain.popupmenuVerfahren.String = {'','Skogestad','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
             
-         elseif(anzT==1 && Tt==0)   % Strecke hat 1 Zeitkonstante und keine Totzeit
+         elseif(anzT==1 && Tt==0)   % Strecke hat 1 Zeitkonstante und keine Totzeit -> kein Skogestad. Kein Reinisch, da C1Strich = 0, wenn keine Totzeit vorhanden ist. Deshalb kann kein Ergebnis berechnet werden.
              handlesMain.popupmenuVerfahren.Value = 1;
-            handlesMain.popupmenuVerfahren.String = {'','Reinisch'};
-            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
+            handlesMain.popupmenuVerfahren.String = {''};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'off';
              
          end
          if(anzT==0) % Strecke ohne Zeitkonstante
@@ -318,13 +318,19 @@ switch handles.selectedControlledSystem
             handlesMain.popupmenuVerfahren.String = {'','Skogestad'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
             
-        elseif(anzT==1 && Tt>0) % Strecke hat 1 Zeitkonstante und eine Totzeit
+        elseif(anzT==0 && Tt==0) % Strecke hat keine Zeitkonstante, hat keine Totzeit -> kein Skogestad
+            handlesMain.popupmenuVerfahren.Value = 1;
+            handlesMain.popupmenuVerfahren.String = {''};
+            handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'off';
+        end
+            
+        if(anzT==1 && Tt>0) % Strecke hat 1 Zeitkonstante und eine Totzeit
              handlesMain.popupmenuVerfahren.Value = 1;
             handlesMain.popupmenuVerfahren.String = {'','Skogestad','Reinisch'};
             handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'on';
-         elseif(anzT==1 && Tt==0) % Strecke 1 Zeitkonstanten, keine Totzeit -> kein Skogestad
+         elseif(anzT==1 && Tt==0) % Strecke 1 Zeitkonstanten, keine Totzeit -> kein Skogestad. Kein Reinisch, da C1Strich = 0, wenn keine Totzeit vorhanden ist. Deshalb kann kein Ergebnis berechnet werden.
              handlesMain.popupmenuVerfahren.Value = 1;
-             handlesMain.popupmenuVerfahren.String = {'Reinisch'};
+             handlesMain.popupmenuVerfahren.String = {''};
              handlesMain.radiobuttonPlotStepClosedLoop.Enable = 'off';
          end
              

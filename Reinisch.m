@@ -113,6 +113,8 @@ C2 = A2+totzeitTt*A1+(totzeitTt^2)/2;
 
                     % zeitkonstantenTSort(1) ist größte Zeitkonstante der Strecke 
                     % zeitkonstantenTSort(2) ist zweitgrößte Zeitkonstante der Strecke 
+                    
+                    % bei PT1-Strecke ohne Totzeit Problem, da C1Strich = 0
                     C1Strich = C1-zeitkonstantenTSort(1);
                     C2Strich = C2-zeitkonstantenTSort(1)*C1Strich;
 
