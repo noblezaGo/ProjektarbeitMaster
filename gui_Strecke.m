@@ -85,7 +85,7 @@ elseif(strcmp(handles.selectedControlledSystem,'DTn-Strecke'))
 end
 
 % Eingabe K
-handles.textK = uicontrol('style','text','position',[50 260 50 20],'FontSize',10,'BackgroundColor','white','String','K =');
+handles.textK = uicontrol('style','text','position',[50 260 50 20],'FontSize',10,'BackgroundColor','white','String','Ks =');
 handles.editK = uicontrol('style','edit','position',[100 260 100 20]);
 
 % Eingabe Tt

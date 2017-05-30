@@ -99,7 +99,7 @@ handles.grafikUebertragungsfunktionPIRegler=imread('UebertragungsfunktionPIRegle
 [heightImgPIRegler,widthImgPIRegler,dimImgPIRegler] = size(handles.grafikUebertragungsfunktionPIRegler);
 
 % Subpanel mit der Größe des Bildes des P-Reglers erstellen
-handles.subpanelPIRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[150,17,widthImgPIRegler,heightImgPIRegler],'Visible','off');
+handles.subpanelPIRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[150,22,widthImgPIRegler,heightImgPIRegler],'Visible','off');
 % Axes wird in Subpanel erstellt
 handles.axesPIRegler = axes(handles.subpanelPIRegler,'Units','normalized','Position',[0,0,1,1]);
 % Bild wird in Axes angezeigt
@@ -114,7 +114,7 @@ handles.grafikUebertragungsfunktionPDRegler = imread('UebertragungsfunktionPDReg
 [heightImgPDRegler,widthImgPDRegler,dimImgPDRegler] = size(handles.grafikUebertragungsfunktionPDRegler);
 
 % Subpanel mit der Größe des Bildes des PD-Reglers erstellen
-handles.subpanelPDRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[150,35,widthImgPDRegler,heightImgPDRegler],'Visible','off');
+handles.subpanelPDRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[180,35,widthImgPDRegler,heightImgPDRegler],'Visible','off');
 % Axes wird in Subpanel erstellt
 handles.axesPDRegler = axes(handles.subpanelPDRegler,'Units','normalized','Position',[0,0,1,1]);
 % Bild wird in Axes angezeigt
@@ -145,7 +145,7 @@ handles.grafikUebertragungsfunktionPIDRegler=imread('UebertragungsfunktionPIDReg
 [heightImgPIDRegler,widthImgPIDRegler,dimImgPIDRegler] = size(handles.grafikUebertragungsfunktionPIDRegler);
 
 % Axes wird in Subpanel erstellt
-handles.subpanelPIDRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[120,17,widthImgPIDRegler,heightImgPIDRegler],'Visible','off');
+handles.subpanelPIDRegler = uipanel(handles.panelRegler,'BackgroundColor','white','BorderType','none','Units','pixels','Position',[150,25,widthImgPIDRegler,heightImgPIDRegler],'Visible','off');
 % Bild wird in Axes angezeigt
 handles.axesPIDRegler = axes(handles.subpanelPIDRegler,'Units','normalized','Position',[0,0,1,1]);
 image(handles.axesPIDRegler,handles.grafikUebertragungsfunktionPIDRegler);
@@ -190,7 +190,7 @@ handles.popupmenuUeberschwingweite = uicontrol('style','popupmenu','position',[4
 axes(handles.axes1);
 title('Systemsprungantwort');
 xlabel('t in s');
-ylabel('y(t)');
+ylabel('h(t)');
 
 % Choose default command line output for gui_Projektarbeit
 %handles.output = hObject;
